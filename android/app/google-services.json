@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "972603944599",
+    "project_id": "unravel-340708",
+    "storage_bucket": "unravel-340708.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972603944599:android:498e34a85b2a9f2cc983d2",
+        "android_client_info": {
+          "package_name": "com.example.nirvana"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972603944599-tb8dp4mq6boi91nkl00tkos2a6i1r3nh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuhlr0PzfuACU-02OLYgYqc9Wlyl7wkxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "972603944599-tb8dp4mq6boi91nkl00tkos2a6i1r3nh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
