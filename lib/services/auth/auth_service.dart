@@ -63,7 +63,16 @@ return await _auth.signOut();
 
 
 
-// errors
+// Get current user ID directly
+  String get currentUserId {
+    final user = _auth.currentUser;
+    if (user != null) {
+      return user.uid;
+    } else {
+      // Handle the case where the user is not logged in
+      throw Exception("User is not logged in");
+    }
+  }
 
 
 

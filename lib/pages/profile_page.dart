@@ -61,11 +61,23 @@ class ProfilePage extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.blue,
 
+             
             ),
+             child:
+               MyButton(text: 'create business profile', onTap: (){
+                 // go to profile page
+
+              Navigator.pushNamed(context, '/MyBusinessRegistration');
+
+               }),
+                
+              
+
           ),
 
 
-          
+
+         
           
           
           

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class MyOtherTextfield extends StatelessWidget {
   String hintText;
   bool obscureText ;
   TextEditingController controller;
-  final FocusNode? focusNode;
-   MyTextField({
+  
+   MyOtherTextfield({
     super.key,
     required this.hintText,
     required this.obscureText,
     required this.controller,
-     this.focusNode,  onTap,
+    
     });
 
   @override
