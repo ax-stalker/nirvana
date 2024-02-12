@@ -11,6 +11,8 @@ class Categories extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
   final FirebaseFirestore _firestore= FirebaseFirestore.instance;
 
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +22,7 @@ class Categories extends StatelessWidget {
         backgroundColor: Colors.transparent,
 
       ),
-      body: Column(
+      body:  Column(
         children: [
           MyTextField(hintText: 'Enter Category', obscureText: false, controller: _controller),
           SizedBox(height: 25),
@@ -30,6 +32,8 @@ class Categories extends StatelessWidget {
             Map<String,dynamic> data= {'title':_controller.text};
             // step 2
         _firestore.collection('categories').add(data);
+        print('${_controller.text} added succcessfully');
+
 
         _controller.clear();
            }
@@ -43,3 +47,29 @@ class Categories extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+  // body: Column(
+  //       children: [
+  //         MyTextField(hintText: 'Enter Category', obscureText: false, controller: _controller),
+  //         SizedBox(height: 25),
+  //         MyButton(text: "Submit", onTap:(){
+  //          if(_controller.text.isNotEmpty){
+  //            // creating a map
+  //           Map<String,dynamic> data= {'title':_controller.text};
+  //           // step 2
+  //       _firestore.collection('categories').add(data);
+
+  //       _controller.clear();
+  //          }
+
+
+  //         })
+
+
+  //       ],
+  //     )

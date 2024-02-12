@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nirvana/components/appbar.dart';
+import 'package:nirvana/components/my_drawer.dart';
 import 'package:nirvana/components/search.dart';
 
 class SearchPage extends StatefulWidget {
@@ -66,7 +67,8 @@ class _SearchPageState extends State<SearchPage> {
 
 
         ],
-      )
+      ),
+ drawer: MyDrawer(),
     );
   }
 }

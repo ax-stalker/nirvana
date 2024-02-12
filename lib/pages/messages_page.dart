@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nirvana/components/appbar.dart';
 import 'package:nirvana/components/message.dart';
+import 'package:nirvana/components/my_drawer.dart';
 import 'package:nirvana/components/user_tile.dart';
 import 'package:nirvana/pages/chat_page.dart';
 import 'package:nirvana/services/auth/auth_service.dart';
@@ -22,6 +23,7 @@ class _MessagesPageState extends State<MessagesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: const MyAppBar( 'M E S S A G E S'),
+       drawer: MyDrawer(),
       body: _buildUserList(),
     );
 

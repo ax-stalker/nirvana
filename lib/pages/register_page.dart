@@ -51,15 +51,15 @@ try{
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // logo
             Icon (Icons.light, size:60 ,color: Theme.of(context).colorScheme.primary),
             const SizedBox(height:50),
             
             // welcome back message
-            Text('Let\'s create an account for you',style:TextStyle( color: Theme.of(context).colorScheme.primary, fontSize:16),),
+            Center( child: Text('Let\'s create an account for you',style:TextStyle( color: Theme.of(context).colorScheme.primary, fontSize:16),),),
             const SizedBox(height:25),
             // username textfield
              MyTextField(

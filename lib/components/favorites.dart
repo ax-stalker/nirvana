@@ -24,7 +24,7 @@ class MyFavorites extends StatelessWidget {
                         shape: BoxShape.circle,
                       color:Colors.white,
                       image: DecorationImage(
-          image: AssetImage('../lib/images/charlie-green.jpg'),
+          image: AssetImage('android/assets/images/charlie-green.jpg'),
           fit: BoxFit.cover, 
           
               ),

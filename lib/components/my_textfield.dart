@@ -10,7 +10,7 @@ class MyTextField extends StatelessWidget {
     required this.hintText,
     required this.obscureText,
     required this.controller,
-     this.focusNode,  onTap,
+     this.focusNode,
     });
 
   @override
@@ -27,7 +27,7 @@ class MyTextField extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Theme.of(context).colorScheme.primary,),
           ),
-          fillColor: Theme.of(context).colorScheme.secondary,
+          fillColor: Theme.of(context).colorScheme.background,
           filled:true,
           hintText:hintText,
           hintStyle: TextStyle(color:Theme.of(context).colorScheme.primary),

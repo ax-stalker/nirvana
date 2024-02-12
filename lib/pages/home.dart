@@ -18,15 +18,7 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final List _offers = [
-    'OFFER 1',
-    'OFFER 2',
-    'OFFER 3',
-    'OFFER 4',
-    'OFFER 5',
-    'OFFER 6',
-    'OFFER 7',
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,63 +27,36 @@ class _MyHomeState extends State<MyHome> {
       appBar: const MyAppBar('H O M E P A G E'),
       body: Column(
         children: [
+          
 
-          // clickable buttons
-          SingleChildScrollView(
-  scrollDirection: Axis.horizontal, // Use horizontal scrolling
-  child: Container(
-    child: StreamBuilder(
-      stream: _firestore.collection('categories').snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return Row( // Use Row for horizontal arrangement
-            children: snapshot.data!.docs.map((doc) {
-              return Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: ElevatedButton(
-                  
-                  onPressed: () {
-                    // Handle button click here (e.g., navigate to a new screen)
-                    print('Clicked ${doc.data()['title']}');
-                  },
-                  child: Text(doc.data()['title'], style: TextStyle(fontSize: 20)),
-                  style: ElevatedButton.styleFrom(
-                   
-                    backgroundColor: Colors.white, // White fill
-                    foregroundColor: Colors.black, // Black text
-                    side: BorderSide(
-                      color: Colors.black, // Black border
-                      width: 2.0,),),
-                ),
-              );
-            }).toList(),
-          );
-        }
-      },
-    ),
-  ),
-),
-
-
-
-
-
-
-          // Horizontal list
           Container(
-            height: 250,
-            child: ListView.builder(
-              itemCount: _offers.length,
+            height:300,
+            
+            child: ListView(
               scrollDirection: Axis.horizontal,
-              itemBuilder: ((context, index) {
-                return MyCircle(
-                  child: _offers[index],
-                );
-              }),
+              children: [
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+                 MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
+              ],
+            
             ),
           ),
+
+          
+
+
+
+
+
+
+
+      
 
       
   
@@ -142,3 +107,45 @@ class _MyHomeState extends State<MyHome> {
 //       },
 //     ),
 //   ),
+
+
+
+
+
+      // clickable buttons
+//           SingleChildScrollView(
+//   scrollDirection: Axis.horizontal, // Use horizontal scrolling
+//   child: Container(
+//     child: StreamBuilder(
+//       stream: _firestore.collection('categories').snapshots(),
+//       builder: (context, snapshot) {
+//         if (!snapshot.hasData) {
+//           return const Center(child: CircularProgressIndicator());
+//         } else {
+//           return Row( // Use Row for horizontal arrangement
+//             children: snapshot.data!.docs.map((doc) {
+//               return Padding(
+//                 padding: const EdgeInsets.all(4.0),
+//                 child: ElevatedButton(
+                  
+//                   onPressed: () {
+//                     // Handle button click here (e.g., navigate to a new screen)
+//                     print('Clicked ${doc.data()['title']}');
+//                   },
+//                   child: Text(doc.data()['title'], style: TextStyle(fontSize: 20)),
+//                   style: ElevatedButton.styleFrom(
+                   
+//                     backgroundColor: Colors.white, // White fill
+//                     foregroundColor: Colors.black, // Black text
+//                     side: BorderSide(
+//                       color: Colors.black, // Black border
+//                       width: 2.0,),),
+//                 ),
+//               );
+//             }).toList(),
+//           );
+//         }
+//       },
+//     ),
+//   ),
+// ),

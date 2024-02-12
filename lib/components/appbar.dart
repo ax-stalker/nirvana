@@ -13,14 +13,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      title: Text(name),
+      title: Text(name ,
+      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+      ),
       // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
       actions: [
         IconButton(onPressed: () {
           // go to profile page
 
-          Navigator.pushNamed(context, '/profilePage');
-        }, icon: Icon(Icons.person)),
+          Navigator.pushNamed(context, '/settingsPage');
+        }, icon: Icon(Icons.settings, color: Theme.of(context).colorScheme.primary,)),
       ],
     );
   }
