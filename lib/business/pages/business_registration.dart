@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nirvana/components/my_textfield.dart';
 import 'package:nirvana/components/textarea.dart';
-import 'package:nirvana/services/auth/auth_service.dart';
 
 class MyBusinessRegistration extends StatefulWidget {
   final void Function()? onPressed;
