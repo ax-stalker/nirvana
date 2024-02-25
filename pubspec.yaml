@@ -46,6 +46,9 @@ dependencies:
   flutter_typeahead: ^5.1.0
   dropdown_search: ^5.0.6
   file_picker: ^6.1.1
+  image_cropper: ^5.0.1
+  path_provider: ^2.1.2
+  flutter_image_compress: ^2.1.0
 
 dev_dependencies:
   flutter_test:

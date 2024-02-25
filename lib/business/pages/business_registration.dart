@@ -43,11 +43,12 @@ class _MyBusinessRegistrationState extends State<MyBusinessRegistration> {
     if (result==null) return;
     setState(() {
       pickedFile = result.files.first;
+      print(pickedFile!.name);
     });
-    
+  //  uploadImage();
   }
   Future uploadImage() async{
-    final path ='files/${pickedFile!.name}';
+    final path = 'files/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -82,21 +83,24 @@ class _MyBusinessRegistrationState extends State<MyBusinessRegistration> {
       ),
       body: ListView(
         children: [
-          //  logo
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal:25.0, vertical:10),
-            child: Container(
-              decoration: BoxDecoration(
-                 color: Theme.of(context).colorScheme.background,
-                 
-              ),
-              child: Row(children: [
-                 Icon(Icons.cameraswitch,color: Theme.of(context).colorScheme.primary,), 
-                Text('    Upload Logo',style: TextStyle(color:Theme.of(context).colorScheme.primary),),
-                
-              ],),
-            ),
-          ),
+          // //  logo
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal:25.0, vertical:10),
+          //   child: GestureDetector(
+          //     onTap: SelectFile,
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //          color: Theme.of(context).colorScheme.background,
+                   
+          //       ),
+          //       child: Row(children: [
+          //          Icon(Icons.cameraswitch,color: Theme.of(context).colorScheme.primary,), 
+          //         Text('    Upload Logo',style: TextStyle(color:Theme.of(context).colorScheme.primary),),
+                  
+          //       ],),
+          //     ),
+          //   ),
+          // ),
           
 
           SizedBox(height: 15),
@@ -188,6 +192,11 @@ class _MyBusinessRegistrationState extends State<MyBusinessRegistration> {
           // finish button
           ElevatedButton(
             onPressed: () async {
+              // uploadImage();
+              // if(pickedFile!.name == null){
+              //   uploadImage();
+              // }
+              // else print('cannot upload');
               if (FirebaseAuth.instance.currentUser != null) {
                 // Proceed with data creation and Firestore add if all checks pass
                 if (_userId.isNotEmpty &&

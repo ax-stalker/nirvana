@@ -28,7 +28,7 @@ class _MyHomeState extends State<MyHome> {
       body: Column(
         children: [
           
-
+      
           Container(
             height:300,
             
@@ -44,24 +44,65 @@ class _MyHomeState extends State<MyHome> {
                  MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
                  MyCircle(price: "500",productName: "Nike", sizes:" 40-45", imageUrl: "android/assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.jpg",),
               ],
-            
             ),
           ),
-
+      
+          Expanded(
+            child: ListView(
+              children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(9),
+                      child: Container( 
+                        //  height: 200,
+                        // width: 200,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.tertiary,
+                          borderRadius: BorderRadius.circular(9), 
+                          
+                          
+                          ),
+                          child:Column(
+                          children: [
+                            
+                              Image.asset(
+                                  "android/assets/images/irene-kredenets-dwKiHoqqxk8-unsplash.jpg", 
+                                  fit: BoxFit.fitWidth,
+                                       
+                            ),
+                            Text(
+                              "@business_name",
+                              textAlign: TextAlign.left,
+                            ),
+                            Text("1 hr ago"), 
+                            Text('join us for our upcoming opening day for all the cheapest and most affordable clothing and esentials'),
+                            
+                          
+                          
+                          ],
+                                                )
+                      ),
+                    ),
+                  ),
+            
+              ],
+            ),
+          ),
           
-
-
-
-
-
-
-
       
-
       
-  
-
-
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      
         ],
       ),
       drawer: MyDrawer(),

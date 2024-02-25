@@ -20,6 +20,7 @@ class RegisterPage extends StatelessWidget {
 
     // if passwords match then create user 
    if (_passwordController.text == _confirmPasswordController.text){
+    const Center(child: CircularProgressIndicator());
 try{
        _auth.signUpWithEmailAndPassword(
         _emailController.text,
