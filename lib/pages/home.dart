@@ -55,8 +55,8 @@ class _MyHomeState extends State<MyHome> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(9),
                       child: Container( 
-                        //  height: 200,
-                        // width: 200,
+                        
+        
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(9), 
@@ -71,11 +71,21 @@ class _MyHomeState extends State<MyHome> {
                                   fit: BoxFit.fitWidth,
                                        
                             ),
-                            Text(
-                              "@business_name",
-                              textAlign: TextAlign.left,
+
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                
+                                children: [
+                                  Text(
+                                    "@business_name", style: TextStyle(color:Colors.white),  
+                                  ),
+                                  Spacer(),
+                                  Text("1 hr ago"), 
+                                ],
+                              ),
                             ),
-                            Text("1 hr ago"), 
+                           
                             Text('join us for our upcoming opening day for all the cheapest and most affordable clothing and esentials'),
                             
                           
