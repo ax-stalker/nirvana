@@ -1,89 +1,127 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:nirvana/services/display/display_service.dart';
+import 'package:nirvana/services/display/promotion_service.dart';
+import 'package:nirvana/services/locate/locate_service.dart';
 
-class PromotionCard extends StatefulWidget {
-  final PromotionCardData promotionData;
-
-  const PromotionCard({
-    required this.promotionData,
-  });
-
-  @override
-  State<PromotionCard> createState() => _PromotionCardState();
-}
-
-class _PromotionCardState extends State<PromotionCard> {
-  Position? _userLocation;
-
-  @override
-  void initState() {
-    super.initState();
-    _getUserLocation();
-  }
-
-  Future<void> _getUserLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Handle location service disabled case (e.g., prompt user to enable)
-      return;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.always &&
-          permission != LocationPermission.whileInUse) {
-        // Handle denied permission case (e.g., inform user)
-        return;
-      }
-    }
-
-    final Position position = await Geolocator.getCurrentPosition();
-    setState(() {
-      _userLocation = position;
-    });
-  }
+class PromotionCard extends StatelessWidget {
+  final Map<String, dynamic> promotionData;
+  // final Business business; // New required argument
+  const PromotionCard({required this.promotionData});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.promotionData.imageUrl != null)
-              CachedNetworkImage(
-                imageUrl: widget
-                    .promotionData.imageUrl!, // Use ! for non-null assertion
-                placeholder: (context, url) => Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
-            const SizedBox(height: 8.0), // Adjust spacing as needed
-            Text(
-              widget.promotionData.businessName,
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4.0), // Adjust spacing as needed
-            Text(widget.promotionData.message),
-            const SizedBox(height: 8.0), // Adjust spacing as needed
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(widget.promotionData.timestamp),
-                Text(widget.promotionData.location),
-              ],
-            ),
-          ],
+    // final userLocation = LocationService.getCurrentLocation();
+    final imageUrl = promotionData['imageUrl'] ?? ''; // Handle null image URL
+    final location =promotionData['businessLocation'].toString().split(',');
+    
+    final double? latitude = double.tryParse(location[0]);
+    final double? longitude = double.tryParse(location[1]);
+
+    
+  
+ Future<double> _calculateDistance(double latitude, double longitude) async {
+      final userLocation = await Geolocator.getCurrentPosition();
+      final userLatitude = userLocation.latitude;
+      final userLongitude = userLocation.longitude;
+
+      return Geolocator.distanceBetween(
+       
+        userLatitude,
+        userLongitude,
+         latitude,
+        longitude,
+      );
+    }
+
+
+  
+Future<double> calculateDistance() async {
+      // Extract location data
+      final List<String> location =
+          promotionData['businessLocation'].toString().split(',');
+      final double? latitude = double.tryParse(location[0]);
+      final double? longitude = double.tryParse(location[1]);
+
+      if (latitude != null && longitude != null) {
+        return await _calculateDistance(latitude, longitude);
+      } else {
+        // Handle invalid location data (optional)
+        return 0.0; // Or any placeholder value
+      }
+    }
+
+
+    return Container(
+      padding: const EdgeInsets.all(16.0), // Add some padding
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0), // Add rounded corners
+        color: Colors.white, // Set background color
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2), // Add subtle shadow
+            spreadRadius: 2.0, // Adjust shadow spread
+            blurRadius: 5.0, // Adjust shadow blur
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align content to left
+        children: [
+          // Image section (conditional rendering)
+          imageUrl.isNotEmpty
+              ? ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(10.0), // Rounded corners for image
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    // height: 150.0, // Set image height
+                  ),
+                )
+              : SizedBox.shrink(),
+          const SizedBox(height: 10.0), // Add spacing after image
+
+          // Promotion title and message
+          Text(
+            '@${promotionData['businessName']}',
+            style: const TextStyle(fontSize: 12.0, color:Colors.blue ),
+          ),
+          const SizedBox(height: 5.0), 
+          Text(
+            promotionData['message'],
+            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 5.0), // Add spacing after title
+
+          // Additional information (optional)
+           Text(
+            promotionData['businessLocation'].toString(),
+            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 5.0), // Add spacing after title
+
+            FutureBuilder<double>(
+          future: calculateDistance(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final distance = snapshot.data!;
+              return Text(
+                'Distance: ${distance.toStringAsFixed(2)} km', // Format distance with 2 decimal places
+                style: const TextStyle(fontSize: 16.0),
+              );
+            } else if (snapshot.hasError) {
+              // Handle errors during location retrieval (optional)
+              print(snapshot.error);
+              return Text('Error fetching distance');
+            }
+            // Display loading indicator while waiting for distance
+            return CircularProgressIndicator();
+          },
         ),
+    
+
+          
+        ],
       ),
     );
   }

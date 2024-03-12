@@ -6,6 +6,7 @@ import 'package:nirvana/business/image_upload.dart';
 import 'package:nirvana/business/pages/business_registration.dart';
 import 'package:nirvana/business/profile_image.dart';
 import 'package:nirvana/models/categories.dart';
+import 'package:nirvana/pages/home_page.dart';
 import 'package:nirvana/pages/settings_page.dart';
 import 'package:nirvana/services/auth/auth_gate.dart';
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
        home: AuthGate(),
       // home: Categories(),
       // home: ImageUpload(),
+      // home: MyHome(),
       routes: {
         '/profilePage': (context) => ProfilePage(),
         '/settingsPage': (context) => SettingsPage(),

@@ -1,24 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart'; // for @required annotation
+import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart'; // for @required annotation
 
 // Replace with your actual model or data structure
 @immutable // Enforces immutability for data integrity
 class PromotionCardData {
-  final String businessName;
+ final String businessName;
   final String message;
-  final String ?imageUrl;
-  final String timestamp; // unmodified timestamp string
-  final String location;
-  final double? distance; // unmodified location string
+  final String? imageUrl;
+  final String businessId; 
 
   const PromotionCardData({
     required this.businessName,
     required this.message,
-    this.imageUrl,
-    required this.timestamp,
-    required this.location,
-    this.distance,
+    required this.imageUrl,
+    required this.businessId,
   });
+
+
+ 
+
 }
 
 class DisplayServices {
@@ -28,7 +29,8 @@ class DisplayServices {
     // Get promotions with timestamp order
     final promotionsQuery = await _firestore
         .collection('promotions')
-        .orderBy('timestamp', descending: true)
+        .orderBy('timestamp',
+            descending: true) // You can still order by timestamp if needed
         .get();
 
     final List<PromotionCardData> promotions = [];
@@ -42,29 +44,18 @@ class DisplayServices {
       if (businessDoc.exists) {
         final businessData = businessDoc.data();
         final businessName = businessData?['business_name'];
-        final location = businessData?['business_location'];
-
 
         // Combine data
         final promotionCardData = PromotionCardData(
           businessName: businessName,
+          businessId: promotionData['business_id'],
           message: promotionData['message'],
-           imageUrl: promotionData.containsKey('image')
-              ? promotionData['image']
-              : null,
-          timestamp: promotionData['timestamp']
-              .toString(), // Convert Timestamp to String
-          location: location,
+          imageUrl: promotionData['image'],
         );
-        // Log the image URL
-        print('Image URL from promotion: ${promotionCardData.imageUrl}');
-
         promotions.add(promotionCardData);
       }
     }
 
     return promotions;
   }
-
-
 }

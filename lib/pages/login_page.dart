@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await authService.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
-           Navigator.pop(context);
+          //  Navigator.pop(context);
     }
     
     // catch errors

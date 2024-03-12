@@ -20,11 +20,12 @@ class MyBottomNavBar extends StatelessWidget {
           activeColor: Colors.white,
           padding:const EdgeInsets.all(16),
           tabs: const [
-          GButton(icon: Icons.home,),
-          GButton(icon: Icons.search,),
-          GButton(icon: Icons.favorite,),
-          GButton(icon: Icons.email,),
-          GButton(icon: Icons.person,)
+          GButton(icon: Icons.home_filled, text: 'posts'),
+          GButton(icon: Icons.shopping_cart,text: 'products'),
+          GButton(icon: Icons.business_center_rounded,text: "businesses"),
+          GButton(icon: Icons.person_2,text: "profile",)
+          // GButton(icon: Icons.email,),
+          // GButton(icon: Icons.person,)
         ]),
       ),
     );

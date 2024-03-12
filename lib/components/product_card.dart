@@ -1,44 +1,33 @@
-// Product model
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:nirvana/services/display/display_products_service.dart';
 
-class Product {
-  final String name;
-  final String imageUrl;
-  final double price;
+class ProductCard extends StatelessWidget {
+  final Product product;
 
-  const Product({required this.name, required this.imageUrl, required this.price});
-}
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
-// Widget for individual product card
-Widget buildProductCard(Product product) {
-  return Card(
-    child: InkWell(
-      onTap: () {
-        // Navigate to product details or other action
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width / 2, // Half the screen width
+      child: Card(
         child: Column(
           children: [
-            Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
-              height: 100,
-              width: 100,
-            ),
-            const SizedBox(height: 8.0),
-            Text(product.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-            Text(
-              "\$${product.price}",
-              style: TextStyle(fontSize: 14.0, color: Colors.grey),
+            Image.network(product.imageUrl), // Display the image
+            Text(product.name, style: const TextStyle(fontSize: 16.0)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '\$${product.price.toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                // Add any additional buttons or actions here (optional)
+              ],
             ),
           ],
         ),
       ),
-    ),
-  );
+    );
+  }
 }
-
-// StreamBuilder example (assuming Firebase)
-
