@@ -16,7 +16,7 @@ Future<List<Business>> fetchBusinesses() async {
     );
   }).toList();
 
-  return businesses;
+  return businesses; 
 }
 
 class Business {

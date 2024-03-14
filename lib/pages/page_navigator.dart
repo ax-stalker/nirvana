@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nirvana/components/bottom_nav_bar.dart';
 import 'package:nirvana/const.dart';
-import 'package:nirvana/pages/products_page.dart';
+
+import 'package:nirvana/pages/business_list.dart';
+
 import 'package:nirvana/pages/home_page.dart';
 import 'package:nirvana/pages/messages_page.dart';
+import 'package:nirvana/pages/product_list.dart';
 import 'package:nirvana/pages/profile_page.dart';
-import 'package:nirvana/pages/search_page.dart';
+
+
 
 class PageNavigator extends StatefulWidget {
   const PageNavigator({super.key});
@@ -13,46 +17,41 @@ class PageNavigator extends StatefulWidget {
   @override
   State<PageNavigator> createState() => _PageNavigatorState();
 }
-  
-class _PageNavigatorState extends State<PageNavigator> {
 
+class _PageNavigatorState extends State<PageNavigator> {
   // navigate bottom bar
   int _selectedIndex = 0;
-  void navigateBottomBar(int index){
-    setState((){
+  void navigateBottomBar(int index) {
+    setState(() {
       _selectedIndex = index;
     });
   }
 
 // pages
-final List<Widget>_pages=[
+  final List<Widget> _pages = [
 // home
-MyHome(),
+    MyHome(),
 
 
-// searchpage 
-SearchPage(),
+// products page
+    ProductList(),
 
-// favorites
-FavoritesPage(),
+// businesspage
+    BusinessList(),
 // messages
-MessagesPage(),
+    MessagesPage(),
 
 // profile page
-ProfilePage(),
-];
-
+    // ProfilePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:backgroundColor,
+      backgroundColor: backgroundColor,
       bottomNavigationBar: MyBottomNavBar(
-        onTabChange: (index)=> navigateBottomBar(index),
+        onTabChange: (index) => navigateBottomBar(index),
       ),
-
-      
-
       body: _pages[_selectedIndex],
     );
   }
