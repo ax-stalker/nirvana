@@ -30,7 +30,7 @@ try{
 
 
 // sign up
-Future <UserCredential> signUpWithEmailAndPassword(String email, String password, String username, String phone)async {
+Future <UserCredential> signUpWithEmailAndPassword(String email, String password, String username, String phone,)async {
   try{
     UserCredential userCredential= await _auth.createUserWithEmailAndPassword(email: email, password: password);
     // save user info in seperate doc

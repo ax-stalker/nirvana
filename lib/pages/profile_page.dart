@@ -38,17 +38,17 @@ class _ProfilePageState extends State<ProfilePage> {
           
           children: [
             const SizedBox(height: 10),
-            Container(
-              height: 200,
-              width: 200,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                    image: DecorationImage(
-                image: NetworkImage('https://i.pinimg.com/736x/a2/7a/3f/a27a3fb05e975385380921e54f859f4f.jpg'),
-                fit: BoxFit.cover,
-              ),
-              )
-            ),
+            // Container(
+            //   height: 200,
+            //   width: 200,
+            //   decoration: BoxDecoration(
+            //     shape: BoxShape.circle,
+            //         image: DecorationImage(
+            //     image: NetworkImage('https://i.pinimg.com/736x/a2/7a/3f/a27a3fb05e975385380921e54f859f4f.jpg'),
+            //     fit: BoxFit.cover,
+            //   ),
+            //   )
+            // ),
             Text('profile name'),
             SizedBox(height: 10),
             MyButton(text: "edit profile", onTap: onTap),

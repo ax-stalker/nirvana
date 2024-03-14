@@ -1,71 +1,113 @@
-import 'package:flutter/material.dart';
-
-class MySearch extends StatelessWidget {
-  const MySearch({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(color:Colors.grey[700],
-                    borderRadius: BorderRadius.circular(10)),
-                    // row for card contents
-                    child: Row(children: [ 
-                      // profile image
-                       Padding(
-                         padding: const EdgeInsets.all(8.0),
-                         child: Container(
-                          height:100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.white, 
-                            shape:BoxShape.circle,
-                            image: DecorationImage(
-          image: AssetImage('../lib/images/charlie-green.jpg'),
-          fit: BoxFit.cover, 
-          
-              ),
-                           ),
-                         ),
-                       ),
-                       const SizedBox(width: 25),
-                      
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter/material.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
 
-                      //column for business name and distance
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [ 
-                          
-                          Text("Pipe industries", style: TextStyle(fontSize: 20, ),),
-                          Text('5 Km away'),
-                           // rating
-                        Row(
-                        children: [ 
-                          Icon(Icons.star),
-                          Icon(Icons.star),
-                          Icon(Icons.star),
-                          Icon(Icons.star_border),
-                          Icon(Icons.star_border),
-                          
-                        ],
-                      ),
-                        ],
-                      ),
+// class MySearch extends StatefulWidget {
+//  MySearch({super.key});
 
-                     
+//   @override
+//   State<MySearch> createState() => _MySearchState();
+// }
 
-                      // view profile button
-                      // const SizedBox(width:20),
-                      //  Icon(
-                      // Icons.arrow_forward, size: 40,),
+// class _MySearchState extends State<MySearch> {
+//   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-                    ],),
-                    
-                  ),
-                );
-  }
-}
+//    final TextEditingController _userLocationController =
+//       TextEditingController();
+
+//    late final String _userId;
+
+//   String _category = '0';
+
+//   void getLocation() async {
+//     await Geolocator.checkPermission();
+//     await Geolocator.requestPermission();
+//     Position position = await Geolocator.getCurrentPosition(
+//         desiredAccuracy: LocationAccuracy.best);
+//     print(position);
+//     print(_auth.currentUser?.uid);
+//     _userId = _auth.currentUser!.uid;
+//     _userLocationController.text =
+//         position.latitude.toString() + ',' + position.longitude.toString();
+//   }
+
+//   Stream<QuerySnapshot>? _categoriesStream;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _categoriesStream = _firestore.collection('categories').snapshots();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Search'),
+//       ),
+//       body: ListView(children: [
+//         StreamBuilder(
+//                 stream: _firestore.collection('categories').snapshots(),
+//                 builder: (context, snapshot) {
+//                   if (!snapshot.hasData) {
+//                     return Center(
+//                       child: Text('Some errors occurred ${snapshot.error}'),
+//                     );
+//                   }
+//                   List<DropdownMenuItem> categoryItems = [];
+//                   if (!snapshot.hasData) {
+//                     return const CircularProgressIndicator();
+//                   } else {
+//                     final categories = snapshot.data?.docs.reversed.toList();
+
+//                     categoryItems.add(
+//                       DropdownMenuItem(
+//                         value: '0',
+//                         child: const Text('Select Category'),
+//                       ),
+//                     );
+//                     for (var category in categories!) {
+//                       categoryItems.add(
+//                         DropdownMenuItem(
+//                           value: category['title'],
+//                           child: Text(
+//                             category['title'],
+//                           ),
+//                         ),
+//                       );
+//                     }
+//                   }
+
+//                   return Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
+//                     child: Container(
+//                       padding: EdgeInsets.only(right: 15, left: 15),
+//                       decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.grey, width: 1),
+//                         borderRadius: BorderRadius.circular(9),
+//                       ),
+//                       child: DropdownButton(
+//                         //
+
+//                         items: categoryItems,
+//                         onChanged: (value) {
+//                           setState(() {
+//                             _category = value!;
+//                           });
+//                           print(value);
+//                         },
+//                         value: _category,
+//                         isExpanded: true,
+//                         underline: const SizedBox(),
+//                       ),
+//                     ),
+//                   );
+//                 }),
+//       ],)
+//     );
+//   }
+// }
