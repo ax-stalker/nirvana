@@ -122,7 +122,7 @@ class _MyHomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar("HOMEPAGE"),
-      body: Column(
+      body: ListView(
         children: [
           Row(
             children: [

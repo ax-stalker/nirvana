@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -17,7 +16,6 @@ void getLocation() async{
   await Geolocator.checkPermission();
   await Geolocator.requestPermission();
   Position position =await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
-  print(position);
 }
 
 
