@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nirvana/components/appbar.dart';
 import 'package:nirvana/components/bottom_nav_bar.dart';
 import 'package:nirvana/components/promotion_card.dart';
+// import 'package:nirvana/models/fetch_business.dart';
 // import 'package:nirvana/components/business_dropdown.dart';
 // import 'package:nirvana/components/location_slider.dart';
 
@@ -122,7 +123,7 @@ class _MyHomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar("HOMEPAGE"),
-      body: Column(
+      body: ListView(
         children: [
           Row(
             children: [

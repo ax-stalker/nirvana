@@ -42,17 +42,17 @@ class ProductViewPage extends StatelessWidget {
               return Row(
                 children: [
                   for (int i = startIndex; i < endIndex; i++)
-                    GestureDetector(
-                      onTap: () {
-                        
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProductDescriptionPage(products[i]),
+                              builder: (context) =>
+                                  ProductDescriptionPage(products[i]),
                             ),
                           );
                         },
-                      child: Expanded(
                         child: Card(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
