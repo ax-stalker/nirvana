@@ -7,19 +7,10 @@ class BusinessService{
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final FirebaseAuth _auth =FirebaseAuth.instance;
 
+  getBusinessAccounts() {}
+
 
 // get business accounts
-
-Stream <List<Map<String,dynamic>>> getBusinessAccounts(){
-  return _firestore.collection('businesses').snapshots().map((snapshot){
-    return snapshot.docs.map((doc){
-      // go through each individual business
-      final user =doc.data();
-      return user;
-
-    }).toList();
-  });
-}
 
 
 
