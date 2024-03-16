@@ -1,4 +1,4 @@
-// product_view.dart
+// view all products for that category
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,17 +42,17 @@ class ProductViewPage extends StatelessWidget {
               return Row(
                 children: [
                   for (int i = startIndex; i < endIndex; i++)
-                    GestureDetector(
-                      onTap: () {
-                        
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProductDescriptionPage(products[i]),
+                              builder: (context) =>
+                                  ProductDescriptionPage(products[i]),
                             ),
                           );
                         },
-                      child: Expanded(
                         child: Card(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

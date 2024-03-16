@@ -67,6 +67,7 @@ Future<List<Promotion>> fetchPromotions() async {
 
 
 class BusinessFilter {
+  
   static Future<List<Business>> getNearbyBusinesses(
       List<Business> allBusinesses, double selectedDistance) async {
     final userLocation = await LocationService.getCurrentLocation();
