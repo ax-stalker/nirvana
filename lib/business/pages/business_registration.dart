@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nirvana/components/my_textfield.dart';
 import 'package:nirvana/components/textarea.dart';
+import 'package:nirvana/services/auth/auth_service.dart';
 
 class MyBusinessRegistration extends StatefulWidget {
   final void Function()? onPressed;
@@ -43,12 +45,11 @@ class _MyBusinessRegistrationState extends State<MyBusinessRegistration> {
     if (result==null) return;
     setState(() {
       pickedFile = result.files.first;
-      print(pickedFile!.name);
     });
-  //  uploadImage();
+    
   }
   Future uploadImage() async{
-    final path = 'files/${pickedFile!.name}';
+    final path ='files/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -83,24 +84,21 @@ class _MyBusinessRegistrationState extends State<MyBusinessRegistration> {
       ),
       body: ListView(
         children: [
-          // //  logo
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal:25.0, vertical:10),
-          //   child: GestureDetector(
-          //     onTap: SelectFile,
-          //     child: Container(
-          //       decoration: BoxDecoration(
-          //          color: Theme.of(context).colorScheme.background,
-                   
-          //       ),
-          //       child: Row(children: [
-          //          Icon(Icons.cameraswitch,color: Theme.of(context).colorScheme.primary,), 
-          //         Text('    Upload Logo',style: TextStyle(color:Theme.of(context).colorScheme.primary),),
-                  
-          //       ],),
-          //     ),
-          //   ),
-          // ),
+          //  logo
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal:25.0, vertical:10),
+            child: Container(
+              decoration: BoxDecoration(
+                 color: Theme.of(context).colorScheme.background,
+                 
+              ),
+              child: Row(children: [
+                 Icon(Icons.cameraswitch,color: Theme.of(context).colorScheme.primary,), 
+                Text('    Upload Logo',style: TextStyle(color:Theme.of(context).colorScheme.primary),),
+                
+              ],),
+            ),
+          ),
           
 
           SizedBox(height: 15),
@@ -192,11 +190,6 @@ class _MyBusinessRegistrationState extends State<MyBusinessRegistration> {
           // finish button
           ElevatedButton(
             onPressed: () async {
-              // uploadImage();
-              // if(pickedFile!.name == null){
-              //   uploadImage();
-              // }
-              // else print('cannot upload');
               if (FirebaseAuth.instance.currentUser != null) {
                 // Proceed with data creation and Firestore add if all checks pass
                 if (_userId.isNotEmpty &&
