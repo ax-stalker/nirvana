@@ -1,12 +1,46 @@
+//  displays a single product
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:nirvana/pages/business_profile.dart';
+import 'package:nirvana/pages/search_business_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
-class ProductDescriptionPage extends StatelessWidget {
+class ProductDescriptionPage extends StatefulWidget {
   final DocumentSnapshot product;
 
   const ProductDescriptionPage(this.product);
+
+  @override
+  State<ProductDescriptionPage> createState() => _ProductDescriptionPageState();
+}
+
+
+class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
+  
+
+
+
+  Future<double> _calculateDistance(String location) async {
+    final userLocation = await _getUserLocation();
+    final List<String> parts = location.split(',');
+    final double businessLatitude = double.parse(parts[0]);
+    final double businessLongitude = double.parse(parts[1]);
+    final double distanceInMeters = await Geolocator.distanceBetween(
+      userLocation.latitude,
+      userLocation.longitude,
+      businessLatitude,
+      businessLongitude,
+    );
+    return distanceInMeters / 1000; // Convert meters to kilometers
+  }
+
+  Future<Position> _getUserLocation() async {
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +63,7 @@ class ProductDescriptionPage extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
                   child: Image.network(
-                    product['image'],
+                    widget.product['image'],
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -39,7 +73,7 @@ class ProductDescriptionPage extends StatelessWidget {
             FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance
                   .collection('businesses')
-                  .doc(product['business_id'])
+                  .doc(widget.product['business_id'])
                   .get(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -58,6 +92,7 @@ class ProductDescriptionPage extends StatelessWidget {
                 final businessLocation = businessData['business_location'];
                 final businessPhoneNumber =
                     businessData['business_phone_number'];
+               
 
                 // for google maps
                 Future<void> _openMap() async {
@@ -82,19 +117,19 @@ class ProductDescriptionPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          product['name'],
+                          widget.product['name'],
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         SizedBox(height: 16.0),
                         Text(
-                          'Price: \$${product['price']}',
+                          'Price: \$${widget.product['price']}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                          SizedBox(height: 16.0),
                         Text(
-                          product['description'],
+                          widget.product['description'],
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                         SizedBox(height: 16.0),
@@ -112,16 +147,85 @@ class ProductDescriptionPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          'Location: $businessLocation',
+                        // distance
+                        FutureBuilder<double>(
+                          future: _calculateDistance(businessLocation),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+                            if (!snapshot.hasData || snapshot.data == null) {
+                              return Text('No data found');
+                            }
+
+                            final distance = snapshot.data!;
+                            return Text(
+                              'Distance: ${distance.toStringAsFixed(2)} km',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          },
                         ),
+                        SizedBox(height: 16),
+
+                        //   ElevatedButton(
+                        //   child: Text("Business Profile"),
+                        //   onPressed: () {
+                        //     showDialog(
+                        //       context: context,
+                        //       builder: (BuildContext context) {
+                        //         return AlertDialog(
+                        //           content: FutureBuilder<Position>(
+                        //             future: _getUserLocation(),
+                        //             builder: (context, snapshot) {
+                        //               if (snapshot.connectionState ==
+                        //                   ConnectionState.waiting) {
+                        //                 return CircularProgressIndicator();
+                        //               }
+                        //               if (snapshot.hasError) {
+                        //                 return Text('Error: ${snapshot.error}');
+                        //               }
+                        //               if (!snapshot.hasData ||
+                        //                   snapshot.data == null) {
+                        //                 return Text('No data found');
+                        //               }
+
+                        //               final userLocation = snapshot.data!;
+                        //               Navigator.pop(
+                        //                   context); // Close the dialog
+                        //               Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                   builder: (context) =>
+                        //                       BusinessProfilePage(
+                        //                     businessId:
+                        //                         widget.product['business_id'],
+                        //                     userPosition: userLocation,
+                        //                   ),
+                        //                 ),
+                        //               );
+                        //               return SizedBox(); // Return an empty widget
+                        //             },
+                        //           ),
+                        //         );
+                        //       },
+                        //     );
+                        //   },
+                        // ),
+                        // SizedBox(height: 16.0),
+
+
+                       
+                       
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // IconButton(
-                            //   icon: Icon(Icons.shopping_cart),
-                            //   onPressed: () {},
-                            // ),
+                          
                             // SizedBox(height: 16.0),
                             ElevatedButton(
                               onPressed: _openMap,
@@ -150,4 +254,5 @@ class ProductDescriptionPage extends StatelessWidget {
       ),
     );
   }
+ 
 }

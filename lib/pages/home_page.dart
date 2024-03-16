@@ -1,17 +1,8 @@
-// import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nirvana/components/appbar.dart';
-import 'package:nirvana/components/bottom_nav_bar.dart';
-import 'package:nirvana/components/promotion_card.dart';
-// import 'package:nirvana/models/fetch_business.dart';
-// import 'package:nirvana/components/business_dropdown.dart';
-// import 'package:nirvana/components/location_slider.dart';
-
-// import 'package:nirvana/models/promotions.dart';
- import 'package:nirvana/pages/search_business_page.dart' as SearchBusiness;
-
-import 'package:nirvana/services/display/promotion_service.dart';
-// import 'package:nirvana/services/search/search_business_service.dart';
+import 'package:nirvana/components/my_textfield.dart';
+import 'package:nirvana/components/wall_post.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({super.key});
@@ -21,179 +12,86 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
-   List<Map<String, dynamic>> _combinedData = []; // Store combined data
+  // get current user details
+  final currentUser = FirebaseAuth.instance.currentUser;
+  final textController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchData(); // Fetch data on initialization
+  void postMessage() {
+    // only post when there is something in the textfield
+    if (textController.text.isNotEmpty){
+
+      // store in firebase
+      FirebaseFirestore.instance.collection("User Posts").add({
+        'UserEmail':currentUser!.email,
+        'Message': textController.text,
+        'TimeStamp': Timestamp.now(),
+        'Likes': [],
+
+      });
+    }
+
+    // clear the texfield:
+    setState((){
+      textController.clear();
+    });
   }
-
-
-  Future<void> _fetchData() async {
-    // ... (existing code to fetch businesses and promotions)
-     // Call your functions to fetch businesses and promotions
-    final businesses = await fetchBusinesses();
-    final promotions = await fetchPromotions();
-
-    _combinedData = promotions
-        .map((promotion) {
-          final matchingBusiness = businesses.firstWhere(
-            (business) => business.business_id == promotion.businessId,
-             // Handle case where business is not found
-          );
-
-          if (matchingBusiness == null)
-            return null; // Skip promotion if business not found
-
-          return {
-            'businessName': matchingBusiness.name,
-            'businessLocation': matchingBusiness.businessLocation,
-            'imageUrl': promotion.imageUrl ?? '', // Handle null image URL
-            'message': promotion.message,
-           
-          };
-        })
-        .where((data) => data != null).cast<Map<String, dynamic>>()
-        .toList();
-
-    // Update UI with combined data
-    setState(() {});
-  }
-  
-
-  void showLocationRangeDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        double _distance = 50; // Initialize slider value
-
-        return AlertDialog(
-          title: Text("Select Range for Promotions"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min, // Avoid exceeding screen size
-            children: [
-              
-              
-              StatefulBuilder(
-                builder: (context, state) {
-                  return Slider(
-                    value: _distance,
-                  
-                    min: 10,
-                    max: 200,
-                    divisions: 19,
-                    label: '${_distance.toString()} km',
-                    activeColor: Theme.of(context).colorScheme.primary,
-                    inactiveColor: Theme.of(context).colorScheme.secondary,
-                    thumbColor: Theme.of(context).colorScheme.tertiary,
-                    onChanged: (value) {
-                      state(() {
-                        // Use setState within the dialog's context
-                        _distance = value;
-                      });
-                    },
-                  );
-                }
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Process the selected distance (e.g., print it)
-                print("Selected distance: $_distance km");
-                Navigator.pop(context); // Close the dialog
-              },
-              child: Text("Save"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context), // Close without saving
-              child: Text("Cancel"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar("HOMEPAGE"),
-      body: ListView(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => SearchBusiness.SearchBusinessPage()),
-                      ),
+        appBar: AppBar(title: Text("logged in as : ${currentUser!.email}")),
+        body: Column(children: [
+          Expanded(
+              child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("User Posts")
+                .orderBy(
+                  "TimeStamp",
+                  descending: true,
+                )
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount:snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    // get the message
+                    final post = snapshot.data!.docs[index];
+                    return WallPost(
+                      message: post['Message'],
+                      user: post['UserEmail'],
+                      postId: post.id,
+                      likes: List<String>.from(post['Likes']?? []),
+                      
                     );
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(9),
-                          color: Theme.of(context).colorScheme.background,
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.primary)),
-                      height: 50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          
-                          children: [
-                          Icon(Icons.search,
-                              color: Theme.of(context).colorScheme.primary, size: 30),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Search for a service",
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ]),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right:25.0),
-                child: IconButton(
-                    onPressed: () => showLocationRangeDialog(context),
-                    icon: Icon(Icons.sort,
-                        color: Theme.of(context).colorScheme.primary)),
-              )
-            ],
-          ),
-        // promotions and offers section
-         _combinedData.isNotEmpty
-              ? ListView.builder(
-                shrinkWrap: true,
-                  itemCount: _combinedData.length,
-                  itemBuilder: (context, index) {
-                    final promotionData = _combinedData[index];
-                    // Use this promotion data to populate your promotion card widget
-                    return PromotionCard(promotionData: promotionData,);
-                  },
-                )
-              : Text("No promotions found"),
-        ],
-        
-      ),
-      // MyBottomNavBar(onTabChange: (int ) { 0 },);
-    );
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error' + snapshot.error.toString()));
+              } return const Center(
+                child: CircularProgressIndicator()
+              );
+            },
+          )),
+
+// sending a message
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Row(
+              children: [
+                Expanded(
+                    child: MyTextField(
+                  controller: textController,
+                  hintText: "What's up friend ...",
+                  obscureText: false,
+                )),
+                IconButton(
+                    onPressed: postMessage,
+                    icon: const Icon(Icons.send),
+                    color: Theme.of(context).colorScheme.primary),
+              ],
+            ),
+          )
+        ]));
   }
 }

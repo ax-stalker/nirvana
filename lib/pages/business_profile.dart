@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BusinessProfilePage extends StatelessWidget {
   final String businessId;
@@ -68,32 +69,60 @@ class BusinessProfilePage extends StatelessWidget {
                 SizedBox(height: 16.0),
                 Card(
                   child: ListTile(
-                    title: Text('Name: ${businessData['business_name']}'),
+                    title: Text('${businessData['business_name']}' ,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary)),
                   ),
                 ),
                 Card(
                   child: ListTile(
                     title:
-                        Text('Category: ${businessData['business_category']}'),
+                        Text('Category: ${businessData['business_category']}' ,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary)),
                   ),
                 ),
                 Card(
                   child: ListTile(
                     title: Text(
-                        'Description: ${businessData['business_description']}'),
+                        'Description: ${businessData['business_description']}',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary)),
                   ),
                 ),
                 Card(
                   child: ListTile(
                     title: Text(
-                        'Location: ${(distanceInKm).toStringAsFixed(2)} km'),
+                        '${(distanceInKm).toStringAsFixed(2)} km away',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary)),
                   ),
                 ),
                 Card(
                   child: ListTile(
                     title: Text(
-                        'Phone Number: ${businessData['business_phone_number']}'),
+                        'Phone Number: ${businessData['business_phone_number']}',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary)),
                   ),
+                ),
+                 Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+          
+                    SizedBox(height: 16.0),
+                    
+                    ElevatedButton(
+                        onPressed: () async {
+                          final _call = 'tel:+254${businessData['business_phone_number']}';
+                          if (await canLaunch(_call)) {
+                            await launch(_call);
+                          }
+                        },
+                        child: Icon(Icons.call)),
+
+                        
+                  ],
                 ),
               ],
             ),

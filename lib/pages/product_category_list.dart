@@ -1,7 +1,10 @@
+// contains the category list for all products
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:nirvana/pages/product_view_page.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:nirvana/pages/products_view_page.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({Key? key}) : super(key: key);
@@ -13,9 +16,21 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList> {
   late Future<QuerySnapshot> _categoryFuture;
 
+   Future<void> _checkLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        // Handle the case where the user has permanently denied location permission
+        return;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _checkLocationPermission();
     _categoryFuture =
         FirebaseFirestore.instance.collection('product_categories').get();
   }

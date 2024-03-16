@@ -6,7 +6,7 @@ import 'package:nirvana/pages/business_list.dart';
 
 import 'package:nirvana/pages/home_page.dart';
 import 'package:nirvana/pages/messages_page.dart';
-import 'package:nirvana/pages/product_list.dart';
+import 'package:nirvana/pages/product_category_list.dart';
 import 'package:nirvana/pages/profile_page.dart';
 
 
