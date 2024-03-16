@@ -39,10 +39,10 @@ class _PageNavigatorState extends State<PageNavigator> {
 // businesspage
     BusinessList(),
 // messages
-    MessagesPage(),
+   // MessagesPage(),
 
 // profile page
-    // ProfilePage(),
+     ProfilePage(),
   ];
 
   @override

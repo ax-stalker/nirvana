@@ -1,117 +1,134 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nirvana/business/pages/business_home_page.dart';
-import 'package:nirvana/business/services/business_service.dart';
-import 'package:nirvana/components/appbar.dart';
 import 'package:nirvana/components/my_button.dart';
-import 'package:nirvana/components/my_drawer.dart';
-import 'package:nirvana/components/user_tile.dart';
-import 'package:nirvana/services/auth/auth_service.dart';
-import 'package:nirvana/components/profilecard.dart';
 
 class ProfilePage extends StatefulWidget {
 
-  ProfilePage({
-    super.key,
-  });
+   const ProfilePage({super.key} );
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-// business and auth service
-final BusinessService _businessService= BusinessService();
-final AuthService _authService= AuthService();
-
-
-
 class _ProfilePageState extends State<ProfilePage> {
-  void Function()? onTap;
+  final String profileImageUrl ="https://i.pinimg.com/736x/a2/7a/3f/a27a3fb05e975385380921e54f859f4f.jpg";
+
+  final String username = "User name";
+
+  final currentUser =FirebaseAuth.instance.currentUser!;
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: MyAppBar('P R O F I L E'),
-         drawer: MyDrawer(),
-        body: Column(
-          
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('User Profile'),
+        automaticallyImplyLeading: false,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 10),
-            // Container(
-            //   height: 200,
-            //   width: 200,
-            //   decoration: BoxDecoration(
-            //     shape: BoxShape.circle,
-            //         image: DecorationImage(
-            //     image: NetworkImage('https://i.pinimg.com/736x/a2/7a/3f/a27a3fb05e975385380921e54f859f4f.jpg'),
-            //     fit: BoxFit.cover,
-            //   ),
-            //   )
-            // ),
-            Text('profile name'),
-            SizedBox(height: 10),
-            MyButton(text: "edit profile", onTap: onTap),
-            SizedBox(height: 25),
-            MyButton(
-                text: 'create business profile',
-                onTap: () {
-                  // go to profile page
-                    
-                  Navigator.pushNamed(context, '/MyBusinessRegistration');
-                }),
-                SizedBox(height:20),
-            // build a list of businesss accounts for the currently logged in user
-        Expanded(
-          
-          child: _buildAccountsList()),
-        
-        
-        
-        
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage(profileImageUrl),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              username,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+            ElevatedButton(
+              onPressed: () {
+
+              },
+              child: const Text('Edit'),
+            ),
+            const SizedBox(height: 20),
+            ExpansionTile(title: const Text("Business"),
+            childrenPadding: const EdgeInsets.all(8),
+            children: [
+            ElevatedButton(
+              onPressed: () {
+                ShowModalBottomSheet(context);
+              },
+              child: const Text('owned business'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/MyBusinessRegistration');
+              },
+              child: const Text('create new business'),
+            ),
+
+            ],),
+
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  // build a list of businesss accounts for the currently logged in user
-  Widget _buildAccountsList(){
-    return StreamBuilder(stream: _businessService.getBusinessAccounts(), 
-    builder: (context, snapshot){
-       // error
-      if(snapshot.hasError){
-        return const Text('Error');
-      }
-
-      // loading..
-      if (snapshot.connectionState == ConnectionState.waiting){
-        return const CircularProgressIndicator();
-      }
-      // return list view
-      return ListView(
-        children: snapshot.data!.map<Widget>((userData)=>_buildUserListItem(userData,context)).toList(),
-      );
 
 
-    });
+
+
+
+  Future<dynamic> ShowModalBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      
+                context: context,
+                isScrollControlled:  true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical( top: Radius.circular(30))
+                ),
+                
+                builder: (BuildContext context) {
+                  return SizedBox(
+                    
+                    height: 200,
+                    child: StreamBuilder<QuerySnapshot>(stream: _firestore.collection('businesses').where('uid', isEqualTo: currentUser.uid).snapshots(), 
+                    builder:(context, snapshot){
+                       if (snapshot.connectionState == ConnectionState.waiting){
+                        return const CircularProgressIndicator();
+                       }
+                       if (snapshot.hasError){
+                        return Text('Error: ${snapshot.error}');
+                       }
+
+                      final List<QueryDocumentSnapshot> docs = snapshot.data!.docs;
+                      
+                      return ListView.separated(
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+
+                          var document = docs[index]; 
+                           return MyButton(text: document["business_name"], onTap: (){
+                           Navigator.push(context, MaterialPageRoute(builder:(context)=>BusinessHomePage(id: document.id, name: document['business_name'], category:document['business_category'], description:document['business_description'], contacts:document['business_phone_number'] ,location:document['business_location'], logo_path:document['logo'])));
+                          });  
+                        }, separatorBuilder: (context, index){return const Divider();},
+                      );
+                
+                    } 
+                    ),
+                 
+                  );
+               
+                },
+                
+
+                
+              );
   }
 }
 
-Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context) {
-  // display all accounts with same user id
-  if (userData['uid']==_authService.getCurrentUser()!.uid){
-    return UserTile(
-      text: userData['business_name'],
-      onTap: (){
-        // tapped on a profile go to that profile page
-        Navigator.push(context, MaterialPageRoute(builder:(context)=>BusinessHomePage() ));
-
-      },
-    );
-  }else{
-      return Container();
-    }
-
-  
-}
