@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nirvana/components/appbar.dart';
+import 'package:nirvana/components/my_drawer.dart';
+
 import 'package:nirvana/components/my_textfield.dart';
 import 'package:nirvana/components/wall_post.dart';
+import 'package:nirvana/helper/helper_methods.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({super.key});
@@ -39,7 +43,9 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("logged in as : ${currentUser!.email}")),
+        appBar: MyAppBar("L I V E F E E D"),
+      //  drawer: MyDrawer(),
+        
         body: Column(children: [
           Expanded(
               child: StreamBuilder(
@@ -63,6 +69,7 @@ class _MyHomeState extends State<MyHome> {
                       postId: post.id,
                       likes: List<String>.from(post['Likes']?? []),
                       
+                      
                     );
                   },
                 );
@@ -82,7 +89,7 @@ class _MyHomeState extends State<MyHome> {
                 Expanded(
                     child: MyTextField(
                   controller: textController,
-                  hintText: "What's up friend ...",
+                  hintText: "What's up friend ....",
                   obscureText: false,
                 )),
                 IconButton(
@@ -92,6 +99,8 @@ class _MyHomeState extends State<MyHome> {
               ],
             ),
           )
-        ]));
+        ]),
+        
+        );
   }
 }
