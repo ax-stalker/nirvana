@@ -12,6 +12,7 @@ migrate_working_dir/
 
 home.dart.txt
 home.txt
+home_page.txt
 # IntelliJ related
 *.iml
 *.ipr
