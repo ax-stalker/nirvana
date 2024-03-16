@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nirvana/business/models/product.dart';
 import 'package:nirvana/business/models/product_controller.dart';
 
 import '../widgets/my_text_form_field.dart';
@@ -21,6 +22,7 @@ class createProduct extends StatefulWidget {
 class _createProductState extends State<createProduct> {
 
   final prd = Get.put(ProductController());
+  MyProduct product = MyProduct();
 
     final _formKey = GlobalKey<FormState>();
 
@@ -68,15 +70,21 @@ class _createProductState extends State<createProduct> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text("product images"),
-                      IconButton(onPressed: selectImages
+                      IconButton(onPressed: (){displayBottomSheet(context);}
                         //   select image from gallery or take one from camera and store in a variable
                       , icon:const  Icon(Icons.camera))
                     ],
                   ),
 
                   ElevatedButton(onPressed:(){
-                        if (prd.uploading) const CircularProgressIndicator();
-                    prd.uploadprd(businessreference);
+                    product.name = prd.nameController.text;
+                    product.category = prd.categoryController;
+                    product.description = prd.descriptionController.text;
+                    product.id = businessreference;
+                    product.price = prd.priceController.text;
+                    product.uploadProductData();
+                    
+                    
                     Navigator.pop(context);
                     },         //   function to show the details entered by user and save them
                     child:const Text("Add product"),
@@ -90,11 +98,52 @@ class _createProductState extends State<createProduct> {
     );
   }
 
-void selectImages()async {
-  ImagePicker  imagePicker = ImagePicker();
-   prd.selectedImages = await imagePicker.pickMultiImage();
+// void selectImages()async {
+//   ImagePicker  imagePicker = ImagePicker();
+//    prd.selectedImages = await imagePicker.pickMultiImage();
   
 
+// }
+
+final picker = ImagePicker();
+
+//Image Picker function to get image from gallery
+Future getImageFromGallery() async {
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      product.image = File(pickedFile.path);
+    }
+}
+
+//Image Picker function to get image from camera
+Future getImageFromCamera() async {
+  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+   if (pickedFile != null) {
+      product.image = File(pickedFile.path);
+    }
+}
+Future displayBottomSheet(BuildContext context){
+  return showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.grey[300],
+    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+    builder: (context) => SizedBox(
+      height: 200,
+      
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          ElevatedButton(onPressed: getImageFromGallery, child:const Text("Gallery"), ),
+          const SizedBox(height: 20,),
+          ElevatedButton(onPressed: getImageFromCamera, child:const Text("camera"),)
+
+
+        ],
+      ),
+    )
+    );
 }
 
 }

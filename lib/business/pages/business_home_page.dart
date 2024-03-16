@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nirvana/business/models/business.dart';
-import 'package:nirvana/business/models/product.dart';
 import 'package:nirvana/business/pages/add_product_page.dart';
 import 'package:nirvana/components/my_drawer.dart';
 
@@ -28,52 +26,77 @@ class BusinessHomePage extends StatelessWidget {
       ),
       drawer: const MyDrawer(),
         // start
-      //  body: StreamBuilder<QuerySnapshot>(
-      //       stream: FirebaseFirestore.instance.collection('products').where('businessref', isEqualTo: businessId).snapshots(),
-      //       builder: (context, snapshot) {
-      //               if (snapshot.connectionState == ConnectionState.waiting) {
-      //                         return const CircularProgressIndicator(); // Or any loading indicator
-      //               }
-      //               if (snapshot.hasError) {
-      //                         return Text('Error: ${snapshot.error}');
+       body: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('product').where('business_id', isEqualTo: id).snapshots(),
+            builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator(); // Or any loading indicator
+                    }
+                    if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
 
-      //               }
-      //               if(snapshot.data!.docs.isEmpty) return Center(child: Text("No products "),);
-      //               //  final List<QueryDocumentSnapshot> docs = snapshot.data!.docs;
-      //               //  String documentid = docs[0].id;
-      //                final documents = snapshot.data!.docs;
-                    
+                    }
+                  
+                     List<DocumentSnapshot> products = snapshot.data!.docs;
+                    if(products.isEmpty) {
+                      return  SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(child: Text("No products ", style: TextStyle(fontSize: 20, color: Colors.grey),)),);
+                    }
+                    print('number of products ${products.length}');
+                    // var product = products[0].data() as Map<String, dynamic>;
+                    // print("product name is ${product['name']} and its description is ${product['description']}");
+                    // return Text("${product}");
+                    return ListView.builder(
+                      itemCount: products.length,
+                      itemBuilder: (context,index){
+                      var product = products[index].data() as Map<String, dynamic>;
+                    print("product name is ${product['name']} and its description is ${product['description']}");
+                    return ExpansionTile(title: Text(product['name']),
+                    // leading: CircleAvatar(
+                    //     radius: 30.0,
+                    //     backgroundImage:
+                    //         NetworkImage(product['image']),
+                    //     backgroundColor: Colors.transparent,
+                    //   ),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CircleAvatar(
+                          
+                        radius: 30.0,
+                        backgroundImage:
+                            NetworkImage(product['image']),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      Column(
+                        children: [const Text("description", style: TextStyle(fontWeight: FontWeight.bold),), const SizedBox(height: 8,),
+                          Text("${product['description']}",   overflow: TextOverflow.ellipsis,),
+                         const SizedBox(height: 10,),
+                         const Text("Category", style: TextStyle(fontWeight: FontWeight.bold),), const SizedBox(height: 8,),
+                         Text("${product['category']}",overflow: TextOverflow.ellipsis,)
+                         ],
+                      )
+                        ],
+                      ),
+                      
+                      ListTile(title: Text(product['price']),),
+                    ],
+                    );
+
+                        
+                      }
+                      );
+
+
+           
          
-                              
-      //               return ListView.separated(
-      //                         itemCount: documents.length,
-      //                         itemBuilder: (context, index) {
-      //                            final document = documents[index];
-      //                             MyProduct prduct = MyProduct.fromSnapshot(document);
-      //                             print(prduct.name!);
-      //                             print(prduct.imageUrls![0]);
-      //                             return const Text("ndsfgbfdjgnfjkdng");
-
-      //                           //  return ProductCard(productName: prduct.name!, productDescription: prduct.description!, imagePaths: prduct.imageUrls![0],price: prduct.price!);   
-                              
-                               
-      //                         },
-      //                         separatorBuilder: (context, index){return const Divider();},
-      //               );
-      //                               },
-      //                             ),
-        // end
-        body: ListView(
-          
-          children: [
-            Text("Business name :$id"),
-            Text("Business category is : $category"),
-            Text("Business description :$description"),
-            Text("Business phonenumber :$contacts"),
-            Text("Business is located at latitude $location"),
-            Image.network(logo_path)
-          ],
-        ),
+                
+                                    },
+                                  ),
+        
       
     floatingActionButton : FloatingActionButton(onPressed:(){
             Navigator.push(context, MaterialPageRoute(builder: (context) => createProduct(docid: id,)));
@@ -84,3 +107,62 @@ class BusinessHomePage extends StatelessWidget {
     
   }
 }
+
+
+
+
+
+// class ProductsByBusiness extends StatelessWidget {
+//   final String businessId;
+
+//   ProductsByBusiness({required this.businessId});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Products by Business')),
+//       body: StreamBuilder<QuerySnapshot>(
+//         stream: FirebaseFirestore.instance.collection('products').where('business_id', isEqualTo: businessId).snapshots(),
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return Center(child: CircularProgressIndicator());
+//           }
+//           if (snapshot.hasError) {
+//             return Center(child: Text('Error: ${snapshot.error}'));
+//           }
+
+//           List<DocumentSnapshot> products = snapshot.data!.docs;
+
+//           if (products.isEmpty) {
+//             return Center(child: Text('No products available for this business'));
+//           }
+
+//           return ListView.builder(
+//             itemCount: products.length,
+//             itemBuilder: (context, index) {
+//               var product = products[index].data() as Map<String, dynamic>;
+//               return ExpansionTile(
+//                 title: Text(product['name']),
+//                 subtitle: Text(product['description']),
+//                 children: [
+//                   ListTile(
+//                     title: Text('Price: \$${product['price']}'),
+//                     // Add more details here if needed
+//                   ),
+//                 ],
+//               );
+//             },
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// void main() {
+//   runApp(MaterialApp(
+//     home: ProductsByBusiness(
+//       businessId: 'your_business_id', // Provide the business_id here
+//     ),
+//   ));
+// }
