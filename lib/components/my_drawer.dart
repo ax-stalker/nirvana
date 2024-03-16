@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nirvana/pages/home_page.dart';
 import 'package:nirvana/services/auth/auth_service.dart';
 import 'package:nirvana/pages/settings_page.dart';
 
@@ -41,6 +42,14 @@ class MyDrawer extends StatelessWidget {
               leading:const Icon(Icons.home),
               onTap:(){
                 Navigator.pop(context);
+                Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHome(
+                        ),
+                      ),);
+                
+                
               },
             ),
           ),
