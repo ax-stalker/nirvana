@@ -1,12 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nirvana/business/geolocation.dart';
+import 'package:nirvana/pages/profile_page.dart';
 import 'package:nirvana/pages/settings_page.dart';
 import 'package:nirvana/services/auth/auth_gate.dart';
 
 import 'package:nirvana/firebase_options.dart';
 
-import 'package:nirvana/pages/profile_page.dart';
+import 'package:nirvana/pages/promotions_page.dart';
 
 import 'package:nirvana/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       // home: ImageUpload(),
       // home: MyHome(),
       // home: BusinessList(),
+      // home: PromotionsPage(),
       routes: {
         '/profilePage': (context) => ProfilePage(),
         '/settingsPage': (context) => SettingsPage(),

@@ -8,6 +8,7 @@ import 'package:nirvana/pages/home_page.dart';
 import 'package:nirvana/pages/messages_page.dart';
 import 'package:nirvana/pages/product_category_list.dart';
 import 'package:nirvana/pages/profile_page.dart';
+import 'package:nirvana/pages/promotions_page.dart';
 
 
 
@@ -30,8 +31,13 @@ class _PageNavigatorState extends State<PageNavigator> {
 // pages
   final List<Widget> _pages = [
 // home
-BusinessList(),
+
+    // MyHome(),
+    PromotionsPage(),
+=======
+// BusinessList(),
     
+
 
 
 // products page
