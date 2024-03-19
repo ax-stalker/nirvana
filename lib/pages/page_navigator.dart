@@ -31,15 +31,20 @@ class _PageNavigatorState extends State<PageNavigator> {
 // pages
   final List<Widget> _pages = [
 // home
+
     // MyHome(),
     PromotionsPage(),
+
+// BusinessList(),
+    
+
 
 
 // products page
     ProductList(),
 
 // businesspage
-    BusinessList(),
+    MyHome(),
 // messages
    // MessagesPage(),
 
