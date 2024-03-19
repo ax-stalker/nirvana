@@ -336,6 +336,7 @@ Future getImageFromCamera() async {
       // img = File(pickedFile.path);
        setState(() {
       img = File(pickedFile.path);
+      isVisible = true;
         
       });
     }
