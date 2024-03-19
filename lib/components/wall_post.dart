@@ -187,6 +187,9 @@ class _WallPostState extends State<WallPost> {
                       ],
                     ),
                     const SizedBox(width: 80),
+                    
+                  ],
+                ),
                     Column(
                       children: [
                         ElevatedButton(
@@ -200,9 +203,6 @@ class _WallPostState extends State<WallPost> {
                         ),
                       ],
                     ),
-                    
-                  ],
-                ),
                 Visibility(
                   visible: showComments,
                   child: StreamBuilder<QuerySnapshot>(
