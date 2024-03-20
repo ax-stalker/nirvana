@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nirvana/business/pages/account_details.dart';
 import 'package:nirvana/business/pages/add_product_page.dart';
+import 'package:nirvana/business/pages/business_section.dart';
+import 'package:nirvana/business/widgets/helper_function.dart';
 import 'package:nirvana/components/my_drawer.dart';
 
 class BusinessHomePage extends StatelessWidget {
    BusinessHomePage({super.key,required this.name, required this.id,
     required this.category, required this.description, required this.contacts, required this.logo_path, required this.location});
    String id, name, location, category, description, contacts, logo_path;
+   List<String> label =['business_name,business_category, business_description, business_id, business_location,business_phone_number, business_logo'];
   
   //  Bbusiness bbusiness;
   
@@ -23,6 +27,14 @@ class BusinessHomePage extends StatelessWidget {
         backgroundColor: Colors.black45,
         title: Text(name),
         centerTitle: true,
+        actions: [IconButton.outlined(onPressed: () => Helper.navigateToScreen(context,userProfile(id: id,
+        name: name,
+        location: location,
+        category: category,
+        contacts: contacts,
+        logo_path: logo_path,
+        description: description,
+        )), icon: const Icon(Icons.person))],
       ),
       drawer:  MyDrawer(),
         // start

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:nirvana/business/widgets/display_inputs.dart';
 import 'package:nirvana/business/widgets/image_slider_widget.dart';
 
 
 
 
 class userProfile extends StatefulWidget {
-  const userProfile({super.key});
+   userProfile({super.key,required this.name, required this.id,
+    required this.category, required this.description, required this.contacts, required this.logo_path, required this.location});
+
+   String id, name, location, category, description, contacts, logo_path; 
+   
 
   @override
   State<userProfile> createState() => _userProfileState();
@@ -25,44 +30,27 @@ class _userProfileState extends State<userProfile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            image_slider(urli: urli),
-               SingleChildScrollView(
+            image_slider(urli: widget.logo_path, docid: widget.id,),
+                SingleChildScrollView(
               child: Column(
                 children: [
-                  // const Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children:[
-                  //     Row(
-                  //      children: [Icon(Icons.star_border_outlined),
-                  //       SizedBox(
-                  //         width: 20,
-              
-                  //       ),
-                  //       Text.rich(TextSpan(
-                  //         children: [
-                  //           TextSpan(text: '5.0',)
-                  //         ]
-                  //       ))
-                  //       ],
-                  //     ),
-                  //     // IconButton(onPressed:(){}, icon: Icon(Icons.share))
-                  //    Icon(Icons.share)
-                  //   ]
-                  // ),
-                  Padding(
+                  
+                
+                  const Padding(
                     padding: EdgeInsets.all(8.0,),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Products Information", style: TextStyle(fontSize:20, fontWeight: FontWeight.bold),),
+                        Text("Business Information", style: TextStyle(fontSize:20, fontWeight: FontWeight.bold),),
                        
                       ],
                     ),
                   ),
-                  displayInfor(label: "product Name", value: "Camon 520",),
-                  displayInfor(label: "product description", value: "camera"),
-                  displayInfor(label: "product category", value: "Lifestyle"),
-                  displayInfor(label: "product price", value: "Ksh :300")
+                  displayInfor(label: 'business_name', value: widget.name, docid: widget.id, collectionName: 'businesses',),
+                  displayInfor(label:'business_phone_number' , value: widget.contacts, docid: widget.id, collectionName: 'businesses'),
+                  displayInfor(label:'business_category', value: widget.category, docid: widget.id, collectionName: 'businesses'),
+                  displayInfor(label: 'business_location', value: widget.location, docid: widget.id,collectionName: 'businesses'),
+                  displayInfor(label: 'business_description', value: widget.description, docid: widget.id,collectionName: 'businesses'),
                 
                
                 ]
@@ -80,88 +68,88 @@ class _userProfileState extends State<userProfile> {
 
 }
 
-class displayInfor extends StatefulWidget {
-   displayInfor({
-    super.key,
-    required this.label,
-    required this.value
-  });
-  String label;
-  String value;
+// class displayInfor extends StatefulWidget {
+//    displayInfor({
+//     super.key,
+//     required this.label,
+//     required this.value
+//   });
+//   String label;
+//   String value;
 
-  @override
-  State<displayInfor> createState() => _displayInforState();
-}
+//   @override
+//   State<displayInfor> createState() => _displayInforState();
+// }
 
-class _displayInforState extends State<displayInfor> {
-  final TextEditingController _textFieldController = TextEditingController();
+// class _displayInforState extends State<displayInfor> {
+//   final TextEditingController _textFieldController = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return  Column(
-    children: [
-      SizedBox(
-      height: 70,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
+//   @override
+//   Widget build(BuildContext context) {
+//     return  Column(
+//     children: [
+//       SizedBox(
+//       height: 70,
+//       child: Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             Column(
+//               children: [
 
-            Text(widget.label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
-            Text(widget.value),
-              ],
-            ),
-            IconButton(onPressed: (){_displayTextInputDialog(context);}, icon:const Icon(Icons.edit))
+//             Text(widget.label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
+//             Text(widget.value),
+//               ],
+//             ),
+//             IconButton(onPressed: (){_displayTextInputDialog(context);}, icon:const Icon(Icons.edit))
 
-          ],
-        ),
-      )),
+//           ],
+//         ),
+//       )),
        
      
       
       
                   
-    ],
-                      );
-  }
+//     ],
+//                       );
+//   }
 
-Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(widget.label),
-          content: TextField(
-            controller: _textFieldController,
-            decoration: InputDecoration(hintText: widget.value),
-          ),
-          actions: [
-             TextButton(
-              child: Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                print(_textFieldController.text);
-                setState(() {
-                widget.value = _textFieldController.text;
+// Future<void> _displayTextInputDialog(BuildContext context) async {
+//     return showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: Text(widget.label),
+//           content: TextField(
+//             controller: _textFieldController,
+//             decoration: InputDecoration(hintText: widget.value),
+//           ),
+//           actions: [
+//              TextButton(
+//               child: Text('CANCEL'),
+//               onPressed: () {
+//                 Navigator.pop(context);
+//               },
+//             ),
+//             TextButton(
+//               child: Text('OK'),
+//               onPressed: () {
+//                 print(_textFieldController.text);
+//                 setState(() {
+//                 widget.value = _textFieldController.text;
                   
-                });
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
+//                 });
+//                 Navigator.pop(context);
+//               },
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+// }
 
 class editDetails extends StatelessWidget {
   String label;
