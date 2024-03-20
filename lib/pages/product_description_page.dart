@@ -241,7 +241,7 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
     if (snapshot.hasData && snapshot.data == 'admin') {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Colors.red, // Indicate a destructive action
+          backgroundColor: Colors.red, // Indicate a destructive action
         ),
         onPressed: () async {
           final shouldDelete = await showDialog(
