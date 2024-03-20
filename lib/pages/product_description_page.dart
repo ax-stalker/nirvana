@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:nirvana/pages/business_profile.dart';
-import 'package:nirvana/pages/search_business_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 

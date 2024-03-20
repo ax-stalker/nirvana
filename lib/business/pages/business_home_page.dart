@@ -52,38 +52,27 @@ class BusinessHomePage extends StatelessWidget {
                       itemCount: products.length,
                       itemBuilder: (context,index){
                       var product = products[index].data() as Map<String, dynamic>;
-                    print("product name is ${product['name']} and its description is ${product['description']}");
-                    return ExpansionTile(title: Text(product['name']),
-                    // leading: CircleAvatar(
-                    //     radius: 30.0,
-                    //     backgroundImage:
-                    //         NetworkImage(product['image']),
-                    //     backgroundColor: Colors.transparent,
-                    //   ),
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CircleAvatar(
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ExpansionTile(title: Text(product['name']),
+                      leading: CircleAvatar(
+                          radius: 30.0,
+                          backgroundImage:
+                              NetworkImage(product['image']),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        expandedCrossAxisAlignment: CrossAxisAlignment.center,
+                        
+                      children: [
+                       const Text("Category", style: TextStyle(fontWeight: FontWeight.bold),), const SizedBox(height: 8,),
+                           Text("${product['category']}",overflow: TextOverflow.ellipsis,),
+                           const SizedBox(height: 8,),
+                           IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  previewPoduct(image: product['image'],))) , icon:const Icon(Icons.edit)),
                           
-                        radius: 30.0,
-                        backgroundImage:
-                            NetworkImage(product['image']),
-                        backgroundColor: Colors.transparent,
+                        
+                        ListTile(title: Text(product['price']),),
+                      ],
                       ),
-                      Column(
-                        children: [const Text("description", style: TextStyle(fontWeight: FontWeight.bold),), const SizedBox(height: 8,),
-                          Text("${product['description']}",   overflow: TextOverflow.ellipsis,),
-                         const SizedBox(height: 10,),
-                         const Text("Category", style: TextStyle(fontWeight: FontWeight.bold),), const SizedBox(height: 8,),
-                         Text("${product['category']}",overflow: TextOverflow.ellipsis,)
-                         ],
-                      )
-                        ],
-                      ),
-                      
-                      ListTile(title: Text(product['price']),),
-                    ],
                     );
 
                         
@@ -108,61 +97,39 @@ class BusinessHomePage extends StatelessWidget {
   }
 }
 
+class previewPoduct extends StatelessWidget {
+   previewPoduct({super.key, required this.image});
+String image;
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar:AppBar(title: const Text("Product details"), centerTitle: true,),
+      body: ListView(
+        children: [
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: AspectRatio(
+                  aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
+                  child: Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      )
+
+    );
+  }
+}
 
 
 
 
-// class ProductsByBusiness extends StatelessWidget {
-//   final String businessId;
 
-//   ProductsByBusiness({required this.businessId});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Products by Business')),
-//       body: StreamBuilder<QuerySnapshot>(
-//         stream: FirebaseFirestore.instance.collection('products').where('business_id', isEqualTo: businessId).snapshots(),
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return Center(child: CircularProgressIndicator());
-//           }
-//           if (snapshot.hasError) {
-//             return Center(child: Text('Error: ${snapshot.error}'));
-//           }
-
-//           List<DocumentSnapshot> products = snapshot.data!.docs;
-
-//           if (products.isEmpty) {
-//             return Center(child: Text('No products available for this business'));
-//           }
-
-//           return ListView.builder(
-//             itemCount: products.length,
-//             itemBuilder: (context, index) {
-//               var product = products[index].data() as Map<String, dynamic>;
-//               return ExpansionTile(
-//                 title: Text(product['name']),
-//                 subtitle: Text(product['description']),
-//                 children: [
-//                   ListTile(
-//                     title: Text('Price: \$${product['price']}'),
-//                     // Add more details here if needed
-//                   ),
-//                 ],
-//               );
-//             },
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-// void main() {
-//   runApp(MaterialApp(
-//     home: ProductsByBusiness(
-//       businessId: 'your_business_id', // Provide the business_id here
-//     ),
-//   ));
-// }
