@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:nirvana/admin/admin_home_page.dart';
 import 'package:nirvana/business/geolocation.dart';
 import 'package:nirvana/pages/profile_page.dart';
 import 'package:nirvana/pages/settings_page.dart';
@@ -42,6 +43,8 @@ class MyApp extends StatelessWidget {
         '/settingsPage': (context) => SettingsPage(),
         '/MyGeolocator': (context) => MyGeolocator(),
         '/MyBusinessRegistration': (context) => createBusiness(),
+        '/admin_dashboard': ((context) => AdminHomePage()),
+        '/promotions_page': ((context)=> PromotionsPage()),
       },
     );
   }

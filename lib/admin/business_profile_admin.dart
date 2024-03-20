@@ -1,33 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class BusinessProfilePage extends StatefulWidget {
+class BusinessProfilePageAdmin extends StatefulWidget {
   final String businessId;
   final Position? userPosition;
 
-  const BusinessProfilePage(
+  const BusinessProfilePageAdmin(
       {required this.businessId, required this.userPosition});
 
   @override
-  State<BusinessProfilePage> createState() => _BusinessProfilePageState();
+  State<BusinessProfilePageAdmin> createState() => _BusinessProfilePageAdminState();
 }
 
-class _BusinessProfilePageState extends State<BusinessProfilePage> {
-
-// added
-  final _firestore =
+class _BusinessProfilePageAdminState extends State<BusinessProfilePageAdmin> {
+final _firestore =
       FirebaseFirestore.instance; // Assuming FirebaseFirestore is initialized
-  late Future<String?> userRole; // Get user role
-
-  @override
-  void initState() {
-    super.initState();
-    userRole = checkUserRole(); // Get user role on widget initialization
-  }
 
   Future<void> deleteBusiness(String businessId) async {
     final shouldDelete = await showDialog(
@@ -51,16 +41,18 @@ class _BusinessProfilePageState extends State<BusinessProfilePage> {
 
     if (shouldDelete ?? false) {
       try {
-        // Delete products
-        QuerySnapshot querySnapshot = await _firestore
+        // Delete all products with the business ID
+        await _firestore
             .collection('products')
             .where('business_id', isEqualTo: businessId)
-            .get();
-        querySnapshot.docs.forEach((doc) {
-          doc.reference.delete();
+            .get()
+            .then((querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            doc.reference.delete();
+          });
         });
 
-        // Delete business
+        // Delete the business document
         await _firestore.collection('businesses').doc(businessId).delete();
 
         // Show success message (optional)
@@ -80,30 +72,6 @@ class _BusinessProfilePageState extends State<BusinessProfilePage> {
       }
     }
   }
-
-  Future<String?> checkUserRole() async {
-    try {
-      // Get current user
-      final User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        // Get user document from Firestore
-        final DocumentSnapshot userDoc =
-            await _firestore.collection('Users').doc(user.uid).get();
-        if (userDoc.exists && userDoc.data() != null) {
-          // Cast data to Map to use containsKey
-          final Map<String, dynamic> userData =
-              userDoc.data()! as Map<String, dynamic>;
-          if (userData.containsKey('role')) {
-            return userData['role'];
-          }
-        }
-      }
-    } catch (e) {
-      print('Error checking user role: $e');
-    }
-    return null;
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -163,15 +131,15 @@ class _BusinessProfilePageState extends State<BusinessProfilePage> {
                 SizedBox(height: 16.0),
                 Card(
                   child: ListTile(
-                    title: Text('${businessData['business_name']}' ,
+                    title: Text('${businessData['business_name']}',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.primary)),
                   ),
                 ),
                 Card(
                   child: ListTile(
-                    title:
-                        Text('Category: ${businessData['business_category']}' ,
+                    title: Text(
+                        'Category: ${businessData['business_category']}',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary)),
                   ),
@@ -186,8 +154,7 @@ class _BusinessProfilePageState extends State<BusinessProfilePage> {
                 ),
                 Card(
                   child: ListTile(
-                    title: Text(
-                        '${(distanceInKm).toStringAsFixed(2)} km away',
+                    title: Text('${(distanceInKm).toStringAsFixed(2)} km away',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary)),
                   ),
@@ -200,43 +167,38 @@ class _BusinessProfilePageState extends State<BusinessProfilePage> {
                             color: Theme.of(context).colorScheme.secondary)),
                   ),
                 ),
-                 Row(
+                Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-          
                     SizedBox(height: 16.0),
-                    
                     ElevatedButton(
                         onPressed: () async {
-                          final _call = 'tel:${businessData['business_phone_number']}';
+                          final _call =
+                              'tel:${businessData['business_phone_number']}';
                           if (await canLaunch(_call)) {
                             await launch(_call);
                           }
                         },
                         child: Icon(Icons.call)),
 
-                        
+                        ElevatedButton(onPressed: (){}, child: Icon(Icons.delete_rounded))
                   ],
+
                 ),
+                
               ],
             ),
           );
+          
         },
+        
       ),
-      floatingActionButton: FutureBuilder<String?>(
-        future: userRole,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data == 'admin') {
-            return FloatingActionButton(
-              onPressed: () => deleteBusiness(widget.businessId),
-              child: const Icon(Icons.delete),
-            );
-          } else {
-            return Container(); // Hide button for non-admins
-          }
-        },
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => deleteBusiness(widget.businessId), // Call deleteBusiness with business ID
+        child: const Icon(Icons.delete),
       ),
     );
+    
   }
 
   List<double> extractCoordinates(String coordinatesString) {

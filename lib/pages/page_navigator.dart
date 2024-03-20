@@ -44,7 +44,9 @@ class _PageNavigatorState extends State<PageNavigator> {
     ProductList(),
 
 // businesspage
-    MyHome(),
+    // MyHome(),
+     BusinessList(),
+
 // messages
    // MessagesPage(),
 
