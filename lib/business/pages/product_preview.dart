@@ -5,32 +5,29 @@ import 'package:nirvana/business/widgets/image_slider_widget.dart';
 
 
 
-class userProfile extends StatefulWidget {
-   userProfile({super.key,required this.name, required this.id,
-    required this.category, required this.description, required this.contacts, required this.logo_path, required this.location});
+class productPreview extends StatefulWidget {
+   productPreview({super.key,required this.name, required this.id, required this.price,
+    required this.category, required this.description, required this.logo_path,});
 
-   String id, name, location, category, description, contacts, logo_path; 
+   String id, name, category, description, price, logo_path; 
    
 
   @override
-  State<userProfile> createState() => _userProfileState();
+  State<productPreview> createState() => _productPreviewState();
 }
 
-class _userProfileState extends State<userProfile> {
+class _productPreviewState extends State<productPreview> {
+  String collection_name = 'product';
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   leading: IconButton(onPressed: (){Navigator.pop(context);}, icon:const Icon(Icons.arrow_back_ios) ),),
-        
+     
       body: SingleChildScrollView(
         child: Column(
           children: [
-            image_slider(urli: widget.logo_path, docid: widget.id,collectionName: "business",imagefolder: "business_profile_image",),
+            image_slider(urli: widget.logo_path, docid: widget.id,collectionName: collection_name,imagefolder: 'product_images',),
                 SingleChildScrollView(
               child: Column(
                 children: [
@@ -41,16 +38,20 @@ class _userProfileState extends State<userProfile> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Business Information", style: TextStyle(fontSize:20, fontWeight: FontWeight.bold),),
+                        Text("Product Information", style: TextStyle(fontSize:20, fontWeight: FontWeight.bold),),
                        
                       ],
                     ),
                   ),
-                  displayInfor(label: 'business_name', value: widget.name, docid: widget.id, collectionName: 'businesses',),
-                  displayInfor(label:'business_phone_number' , value: widget.contacts, docid: widget.id, collectionName: 'businesses'),
-                  displayInfor(label:'business_category', value: widget.category, docid: widget.id, collectionName: 'businesses'),
-                  displayInfor(label: 'business_location', value: widget.location, docid: widget.id,collectionName: 'businesses'),
-                  displayInfor(label: 'business_description', value: widget.description, docid: widget.id,collectionName: 'businesses'),
+      
+
+
+
+                  displayInfor(label: 'name', value: widget.name, docid: widget.id, collectionName: collection_name,),
+                  displayInfor(label:'category', value: widget.category, docid: widget.id, collectionName: collection_name),
+                  // displayInfor(label: 'usiness_location', value: widget.location, docid: widget.id,collectionName: collection_name),
+                  displayInfor(label: 'description', value: widget.description, docid: widget.id,collectionName: collection_name),
+                  displayInfor(label:'Price' , value: 'ksh ${widget.price}', docid: widget.id, collectionName: collection_name),
                 
                
                 ]
@@ -67,6 +68,8 @@ class _userProfileState extends State<userProfile> {
   }
 
 }
+
+
 
 class editDetails extends StatelessWidget {
   String label;
