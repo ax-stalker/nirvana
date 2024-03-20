@@ -44,7 +44,7 @@ class _MyHomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: MyAppBar("L I V E F E E D"),
-      //  drawer: MyDrawer(),
+       drawer: MyDrawer(),
         
         body: Column(children: [
           Expanded(

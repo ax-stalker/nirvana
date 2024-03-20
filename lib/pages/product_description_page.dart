@@ -1,5 +1,6 @@
 //  displays a single product
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,7 +18,6 @@ class ProductDescriptionPage extends StatefulWidget {
 
 class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
   
-
 
 
   Future<double> _calculateDistance(String location) async {
@@ -39,6 +39,52 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
       desiredAccuracy: LocationAccuracy.high,
     );
   }
+
+
+  // added
+
+  Future<String?> _checkUserRole() async {
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .get();
+        if (userDoc.exists && userDoc.data() != null) {
+          final Map<String, dynamic> userData =
+              userDoc.data()! as Map<String, dynamic>;
+          return userData['role'];
+        }
+      }
+    } catch (e) {
+      print('Error checking user role: $e');
+    }
+    return null;
+  }
+
+  Future<void> _deleteProduct() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('product')
+          .doc(widget.product.id)
+          .delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Product deleted successfully!'),
+        ),
+      );
+      Navigator.pop(context); // Go back to the previous page
+    } catch (e) {
+      print('Error deleting product: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting product: ${e.toString()}'),
+        ),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +166,7 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
                         ),
                         SizedBox(height: 16.0),
                         Text(
-                          'Price: \$${widget.product['price']}',
+                          'Price: KSH: ${widget.product['price']}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -171,55 +217,6 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
                         ),
                         SizedBox(height: 16),
 
-                        //   ElevatedButton(
-                        //   child: Text("Business Profile"),
-                        //   onPressed: () {
-                        //     showDialog(
-                        //       context: context,
-                        //       builder: (BuildContext context) {
-                        //         return AlertDialog(
-                        //           content: FutureBuilder<Position>(
-                        //             future: _getUserLocation(),
-                        //             builder: (context, snapshot) {
-                        //               if (snapshot.connectionState ==
-                        //                   ConnectionState.waiting) {
-                        //                 return CircularProgressIndicator();
-                        //               }
-                        //               if (snapshot.hasError) {
-                        //                 return Text('Error: ${snapshot.error}');
-                        //               }
-                        //               if (!snapshot.hasData ||
-                        //                   snapshot.data == null) {
-                        //                 return Text('No data found');
-                        //               }
-
-                        //               final userLocation = snapshot.data!;
-                        //               Navigator.pop(
-                        //                   context); // Close the dialog
-                        //               Navigator.push(
-                        //                 context,
-                        //                 MaterialPageRoute(
-                        //                   builder: (context) =>
-                        //                       BusinessProfilePage(
-                        //                     businessId:
-                        //                         widget.product['business_id'],
-                        //                     userPosition: userLocation,
-                        //                   ),
-                        //                 ),
-                        //               );
-                        //               return SizedBox(); // Return an empty widget
-                        //             },
-                        //           ),
-                        //         );
-                        //       },
-                        //     );
-                        //   },
-                        // ),
-                        // SizedBox(height: 16.0),
-
-
-                       
-                       
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -231,12 +228,53 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
                             ),
                             ElevatedButton(
                                 onPressed: () async {
-                                  final _call = 'tel:+254$businessPhoneNumber';
+                                  final _call = 'tel:$businessPhoneNumber';
                                   if (await canLaunch(_call)) {
                                     await launch(_call);
                                   }
                                 },
-                                child: Icon(Icons.call))
+                                child: Icon(Icons.call)),
+
+                                FutureBuilder<String?>(
+  future: _checkUserRole(),
+  builder: (context, snapshot) {
+    if (snapshot.hasData && snapshot.data == 'admin') {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.red, // Indicate a destructive action
+        ),
+        onPressed: () async {
+          final shouldDelete = await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Confirm Deletion'),
+              content: const Text(
+                  'Are you sure you want to delete this product? This action cannot be undone.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false), // Cancel
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true), // Delete
+                  child: const Text('Delete'),
+                ),
+              ],
+            ),
+          );
+
+          if (shouldDelete ?? false) {
+            await _deleteProduct();
+          }
+        },
+        child: const Text('Delete'),
+      );
+    } else {
+      return Container(); // Hide button for non-admins
+    }
+  },
+),
+
                           ],
                         ),
                       ],
@@ -247,6 +285,7 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
               },
              
             ),
+            
           ],
         ),
       ),

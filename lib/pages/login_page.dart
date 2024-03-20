@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nirvana/admin/admin_home_page.dart';
+import 'package:nirvana/pages/promotions_page.dart';
 import 'package:nirvana/services/auth/auth_service.dart';
 import 'package:nirvana/components/my_button.dart';
 import 'package:nirvana/components/my_textfield.dart';
@@ -14,12 +17,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore _firestore =FirebaseFirestore.instance;
   // email and password text controllers
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
 
-  //  login method
+  // login method
   void login(BuildContext context) async {
     // show loading circle
     showDialog(
@@ -30,27 +34,33 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+
     // auth service
     final authService = AuthService();
-    // try login
+
     try {
+      // Try login
+      print("tried logging in with email");
       await authService.signInWithEmailAndPassword(
-          _emailController.text, _passwordController.text);
-           Navigator.pop(context);
-    }
-    
-    // catch errors
-    
-catch (e) {
-      Navigator.pop(context);
+        _emailController.text,
+        _passwordController.text,
+        
+      );
+       Navigator.pop(context);
+    } catch (e) {
+      // Catch errors
+      Navigator.pop(context); // Close loading dialog
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text(e.toString()),
         ),
       );
-    };
+    }
   }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
