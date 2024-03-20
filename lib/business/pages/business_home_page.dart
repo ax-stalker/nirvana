@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:nirvana/business/pages/account_details.dart';
 import 'package:nirvana/business/pages/add_product_page.dart';
 import 'package:nirvana/business/pages/business_section.dart';
+import 'package:nirvana/business/pages/product_preview.dart';
 import 'package:nirvana/business/widgets/helper_function.dart';
 import 'package:nirvana/components/my_drawer.dart';
+import 'package:nirvana/components/product_card.dart';
 
 class BusinessHomePage extends StatelessWidget {
    BusinessHomePage({super.key,required this.name, required this.id,
@@ -63,29 +65,92 @@ class BusinessHomePage extends StatelessWidget {
                     return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context,index){
+                    products[index].id;
                       var product = products[index].data() as Map<String, dynamic>;
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ExpansionTile(title: Text(product['name']),
-                      leading: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage:
-                              NetworkImage(product['image']),
-                          backgroundColor: Colors.transparent,
-                        ),
-                        expandedCrossAxisAlignment: CrossAxisAlignment.center,
+                      return GestureDetector(
+                        onTap: (){Helper.navigateToScreen(context, productPreview(name: product['name'], id: products[index].id, price: product['price'], category: product['category'], description: product['description'], logo_path: product['image']));},
+                        child: Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Image.network(
+                                    product['image'],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        product['name'],
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        'ksh ${product['price']}',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      );
+                      // return  SizedBox(
+                      //   height: 200,
+                      //   width: 200,
+                      //   // width: MediaQuery.of(context).size.width*0.2, // Half the screen width
+                      //   child: Card(
+                      //     child: Column(
+                      //       children: [
+                      //         Image.network(product['image']), // Display the image
+                      //         Text(product['name'], style: const TextStyle(fontSize: 16.0)),
+                      //         Row(
+                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //           children: [
+                      //             Text(
+                      //               '\ksh ${product['price']}',
+                      //               style: const TextStyle(fontWeight: FontWeight.bold),
+                      //             ),
+                      //             // Add any additional buttons or actions here (optional)
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // );
+                    // return Padding(
+                    //   padding: const EdgeInsets.all(8.0),
+                    //   child: ExpansionTile(title: Text(product['name']),
+                    //   leading: CircleAvatar(
+                    //       radius: 30.0,
+                    //       backgroundImage:
+                    //           NetworkImage(product['image']),
+                    //       backgroundColor: Colors.transparent,
+                    //     ),
+                    //     expandedCrossAxisAlignment: CrossAxisAlignment.center,
                         
-                      children: [
-                       const Text("Category", style: TextStyle(fontWeight: FontWeight.bold),), const SizedBox(height: 8,),
-                           Text("${product['category']}",overflow: TextOverflow.ellipsis,),
-                           const SizedBox(height: 8,),
-                           IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  previewPoduct(image: product['image'],))) , icon:const Icon(Icons.edit)),
+                    //   children: [
+                    //    const Text("Category", style: TextStyle(fontWeight: FontWeight.bold),), const SizedBox(height: 8,),
+                    //        Text("${product['category']}",overflow: TextOverflow.ellipsis,),
+                    //        const SizedBox(height: 8,),
+                    //        IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  previewPoduct(image: product['image'],))) , icon:const Icon(Icons.edit)),
                           
                         
-                        ListTile(title: Text(product['price']),),
-                      ],
-                      ),
-                    );
+                    //     ListTile(title: Text(product['price']),),
+                    //   ],
+                    //   ),
+                    
 
                         
                       }

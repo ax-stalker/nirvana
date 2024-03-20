@@ -10,11 +10,15 @@ class image_slider extends StatefulWidget {
    image_slider({
     super.key,
     required this.urli,
-    required this.docid
+    required this.docid,
+    required this.collectionName,
+    required this.imagefolder,
   });
 
   final String urli;
   String docid;
+  String collectionName;
+  String imagefolder;
 
   @override
   State<image_slider> createState() => _image_sliderState();
@@ -77,11 +81,11 @@ Future getImageFromGallery() async {
      // save image to firestore
                           String imageName = DateTime.now().microsecondsSinceEpoch.toString();
                     // add image to firebase storage
-                  Reference ref = _storage.ref().child("UserProfileImages").child(imageName);
+                  Reference ref = _storage.ref().child(widget.imagefolder).child(imageName);
                   await ref.putFile(img!);
                     String image = await ref.getDownloadURL();
                     final data = {"logo": image};
-                    await _firestore.collection("businesses").doc(widget.docid).set(data, SetOptions(merge: true));
+                    await _firestore.collection(widget.collectionName).doc(widget.docid).set(data, SetOptions(merge: true));
                     print("image saved");
 
       // img = pickedFile as File?;
