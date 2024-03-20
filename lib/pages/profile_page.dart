@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nirvana/business/pages/account_details.dart';
 import 'package:nirvana/business/pages/business_home_page.dart';
 import 'package:nirvana/business/pages/business_section.dart';
+import 'package:nirvana/business/pages/bussiness_page.dart';
+import 'package:nirvana/business/widgets/display_inputs.dart';
 import 'package:nirvana/business/widgets/helper_function.dart';
 import 'package:nirvana/components/my_button.dart';
 import 'package:nirvana/services/auth/auth_service.dart';
@@ -24,11 +27,15 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
     String profileImageUrl = '';
    String username = '';
+   String email = '';
+   String docid = '';
+   
   static Map<String, dynamic> userDetails = {};
 
   final currentUser =FirebaseAuth.instance.currentUser!;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+   final FirebaseStorage _storage = FirebaseStorage.instance;
   @override
   void initState() {
     // TODO: implement initState
@@ -42,30 +49,29 @@ class _ProfilePageState extends State<ProfilePage> {
     return await usercol.where('uid', isEqualTo: currentUser.uid).get()
     .then((value) =>{
       
-      // doc =value.docs
-      // var user = doc.data();
-
-      // userDetails.addAll();
+      
+     
     if (value.docs.isNotEmpty) {
         for(var doc in value.docs){
+          
           setState(() {
-            
-          username = doc['email'];
+             docid = doc.id;
+         
+            username = doc['username'];
+          
+          
+            email = doc['email'];
+          
+          
+        
+            profileImageUrl = doc['profile_image'];
+          
           })
         }
     }
     } );
 
-    // return await _firestore
-    //     .collection('Users')
-    //     .document(currentUser.uid)
-    //     .get()
-    //     .then((val) {
-    //   userDetails.addAll(val.data);
-    // }).whenComplete(() {
-    //   print('${userDetails['environment']}');
-    //   setState(() {});
-    // });
+
   }
   @override
   Widget build(BuildContext context) {
@@ -80,14 +86,39 @@ class _ProfilePageState extends State<ProfilePage> {
                const SizedBox(height: 20),
                Padding(
                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
-                 child: profiler(imageUrl: profileImageUrl),
+                 child: profiler(imageUrl: profileImageUrl, docid: docid,),
                ),
              
               const SizedBox(height: 20),
+              displayInfor(label: "username", value: username, docid: docid,collectionName: 'Users'),
+              displayInfor(label: "email", value: email, docid: docid,collectionName: 'Users'),
         
-              myGestureDetector(name: username, screen:  userProfile(),),
-             
-              myGestureDetector(name: "Businesses", screen: business_accounts(),),
+              // myGestureDetector(name: username, screen:  userProfile(),),
+               ExpansionTile(title: const Text("Business", style: TextStyle(fontSize: 20),),
+              childrenPadding: const EdgeInsets.all(8),
+              children: [
+             myGestureDetector(name: "create new business", screen: createBusiness(),),
+             GestureDetector(
+              onTap: () => ShowModalBottomSheet(context),
+               child: SizedBox(
+                height: 50,
+                width:MediaQuery.of(context).size.width *0.9,
+                child: const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [Text("owned business", style: TextStyle(fontSize: 20),),]
+                      
+                    ),
+                  ),
+                ),
+               ),
+             ),
+     
+
+          
+           
+               ],),
               GestureDetector(
                 onTap: (){
                   final auth= AuthService();
@@ -110,36 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               )
-              // Column(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: [
-              // ElevatedButton(
-              //   onPressed: () {
-        
-              //   },
-              //   child: const Text('Edit'),
-              // ),
-              // const SizedBox(height: 20),
-              // ExpansionTile(title: const Text("Business"),
-              // childrenPadding: const EdgeInsets.all(8),
-              // children: [
-              // ElevatedButton(
-              //   onPressed: () {
-              //     ShowModalBottomSheet(context);
-              //   },
-              //   child: const Text('owned business'),
-              // ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.pushNamed(context, '/MyBusinessRegistration');
-              //   },
-              //   child: const Text('create new business'),
-              // ),
-        
-              // ],),
-        
-              //   ],
-              // ),
+  
             
             ],
           ),
@@ -249,8 +251,9 @@ class myGestureDetector extends StatelessWidget {
 
 class profiler extends StatefulWidget {
   String imageUrl = '';
+  String docid;
 
-   profiler({super.key, required this.imageUrl});
+   profiler({super.key, required this.imageUrl, required this.docid});
 
   @override
   State<profiler> createState() => _profilerState();
@@ -261,6 +264,8 @@ class _profilerState extends State<profiler> {
 
    Helper assist = Helper();
    bool isVisible = false;
+   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +278,7 @@ class _profilerState extends State<profiler> {
         children: [
           CircleAvatar(
            backgroundImage: widget.imageUrl.isNotEmpty? NetworkImage(widget.imageUrl) : null,
-           child: img == null ?const Text('MP'):Image.file(img!,
+           child: img == null ? null:Image.file(img!,
         fit: BoxFit.cover,
            ),
           ),
@@ -282,30 +287,15 @@ class _profilerState extends State<profiler> {
               right: -25,
               child: RawMaterialButton(
                 onPressed: () { displayBottomSheet(context);
-                if(img!.path.isNotEmpty){
-                  return;
-                }
+                
+               
                 },
                 elevation: 2.0,
                 fillColor: const Color(0xFFF5F6F9),
                 padding: const EdgeInsets.all(15.0),
                 shape: const CircleBorder(),
                 child: const Icon(Icons.camera_alt_outlined, color: Colors.blue,)),),
-                Visibility(
-                  visible: isVisible,
-
-                  child: Positioned( 
-                    top: 0,
-                    right: -50,
-                    
-                    child:GestureDetector(
-                    onTap: (){
-                      // save image to firestore
-                      print('saving to firestore $img');
-
-                    },
-                    child: const Text("save"),)),
-                )
+               
         ],
       ),
     );
@@ -323,6 +313,17 @@ Future getImageFromGallery() async {
       isVisible = true;
         
       });
+
+     // save image to firestore
+                          String imageName = DateTime.now().microsecondsSinceEpoch.toString();
+                    // add image to firebase storage
+                  Reference ref = _storage.ref().child("UserProfileImages").child(imageName);
+                  await ref.putFile(img!);
+                    String image = await ref.getDownloadURL();
+                    final data = {"profile_image": image};
+                    await _firestore.collection("Users").doc(widget.docid).set(data, SetOptions(merge: true));
+                    print("image saved");
+
       // img = pickedFile as File?;
       
     }
@@ -336,7 +337,6 @@ Future getImageFromCamera() async {
       // img = File(pickedFile.path);
        setState(() {
       img = File(pickedFile.path);
-      isVisible = true;
         
       });
     }
