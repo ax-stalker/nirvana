@@ -13,11 +13,13 @@ import 'package:flutter/material.dart';
 
 ThemeData lightMode =ThemeData(
   colorScheme: ColorScheme.light(background: Color(0xfffcfdf7),
-  primary:Color(0xff116d34),
-  secondary:Color(0xff506351),
-  tertiary: Color(0xff39656d),
-  inversePrimary: Color(0xff727970),
-  outline: Color(0xff727970),
-  tertiaryContainer: Color(0xffbdeaf4),
+  primary:Color(0xff006e25),
+  secondary:Color(0xff526350),
+  secondaryContainer:Color(0xffd5e8d0),
+  tertiary: Color.fromARGB(15, 191, 201, 202),
+  tertiaryContainer:Color(0xffbcebf2),
+  inversePrimary: Color.fromARGB(255, 102, 117, 94),
+  outline: Color(0xff72796f),
+  
   )
 );

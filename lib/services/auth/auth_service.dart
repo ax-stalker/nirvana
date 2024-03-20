@@ -18,10 +18,7 @@ Future <UserCredential> signInWithEmailAndPassword(String email, password) async
 try{
   UserCredential userCredential=  await _auth.signInWithEmailAndPassword(email: email, password: password);
   // save user info in seperate doc if it doesn't already exist
-    _firestore.collection('Users').doc(userCredential.user!.uid).set({
-      'uid' : userCredential.user!.uid, 'email' : email,
-    });
-
+ 
   return userCredential;
 } on FirebaseAuthException catch (e){
   throw Exception(e.code);
@@ -40,6 +37,7 @@ Future <UserCredential> signUpWithEmailAndPassword(String email, String password
       'username': username,
       'email' : email, 
       'phone':phone,
+      
     });
 
     return userCredential;
@@ -75,6 +73,45 @@ return await _auth.signOut();
   }
 
 
+
+// // get admin status
+//   Future<bool> checkAdminRole() async {
+//     // Get the current user
+//     User? user = _auth.currentUser;
+
+//     if (user != null) {
+//       // Get the user document from the Users collection
+//       DocumentSnapshot userDoc =
+//           await _firestore.collection('Users').doc(user.uid).get();
+
+//       // Check if the user has an admin role
+//       return userDoc['role'] == 'admin';
+//     } else {
+//       // No user signed in
+//       return false;
+//     }
+//   }
+
+Future<bool> checkAdminRole(String userId) async {
+    try {
+      // Get the user document from the Users collection using the provided userId
+      DocumentSnapshot userDoc =
+          await _firestore.collection('Users').doc(userId).get();
+
+      // Check if the user has an admin role
+      if (userDoc.exists &&
+          userDoc.data() != null &&
+          userDoc['role'] == 'admin') {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      // Error handling
+      print('Error checking admin role: $e');
+      return false;
+    }
+  }
 
 
 

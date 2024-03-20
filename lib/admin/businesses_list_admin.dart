@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:nirvana/admin/business_profile_admin.dart';
+import 'package:nirvana/admin/business_search_admin.dart';
 import 'package:nirvana/pages/business_profile.dart';
 import 'package:nirvana/pages/business_search.dart';
 import 'package:nirvana/services/locate/locate_service.dart';
 
-class BusinessList extends StatefulWidget {
+class BusinessAdmin extends StatefulWidget {
   @override
-  _BusinessListState createState() => _BusinessListState();
+  _BusinessAdminState createState() => _BusinessAdminState();
 }
 
-class _BusinessListState extends State<BusinessList> {
+class _BusinessAdminState extends State<BusinessAdmin> {
   final _firestore = FirebaseFirestore.instance;
   Position? userLocation; // Store user location
 
@@ -21,7 +23,7 @@ class _BusinessListState extends State<BusinessList> {
     _checkLocationPermission();
   }
 
-   Future<void> _checkLocationPermission() async {
+  Future<void> _checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -41,7 +43,10 @@ class _BusinessListState extends State<BusinessList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Businesses', style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+        title: Text(
+          'Businesses',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('businesses').snapshots(),
@@ -118,7 +123,7 @@ class _BusinessListState extends State<BusinessList> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BusinessProfilePage(
+                          builder: (context) => BusinessProfilePageAdmin(
                             businessId: businessId,
                             userPosition: userLocation,
                           ),
@@ -126,25 +131,35 @@ class _BusinessListState extends State<BusinessList> {
                       );
                     },
                     child: Card(
-                      // color:  Theme.of(context).colorScheme.secondaryContainer,
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
                       child: ListTile(
                         leading: businessDoc['logo'].isEmpty
-                            ? Icon(Icons.business, color: Theme.of(context).colorScheme.secondary)
+                            ? Icon(Icons.business,
+                                color: Theme.of(context).colorScheme.secondary)
                             : SizedBox(
                                 width: 50.0,
                                 height: 50.0,
                                 child: Image.network(
                                   logoUrl,
                                   errorBuilder: (context, error, stackTrace) =>
-                                      CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
+                                      CircularProgressIndicator(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary),
                                 ),
                               ),
-                        title: Text(businessName, style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
-                        subtitle: Text(businessCategory ,
+                        title: Text(businessName,
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.secondary)),
+                        subtitle: Text(businessCategory,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.tertiary)),
-                        trailing: Text(distance.toStringAsFixed(2) +
-                            ' km',  style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Display distance
+                        trailing: Text(distance.toStringAsFixed(2) + ' km',
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary)), // Display distance
                       ),
                     ),
                   );
@@ -158,7 +173,7 @@ class _BusinessListState extends State<BusinessList> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SearchBusinessPage(),
+              builder: (context) => SearchBusinessPageAdmin(),
             ),
           );
         },

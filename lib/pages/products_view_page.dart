@@ -77,8 +77,8 @@ class ProductViewPage extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '\$${products[i]['price']}',
-                                      style: const TextStyle(
+                                      'KSH: ${products[i]['price']}',
+                                      style: TextStyle(
                                         fontSize: 14.0,
                                         color: Colors.grey,
                                       ),

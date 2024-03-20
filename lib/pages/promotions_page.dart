@@ -3,7 +3,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nirvana/components/appbar.dart';
 import 'package:nirvana/components/like_button.dart';
+import 'package:nirvana/components/my_drawer.dart';
 import 'package:nirvana/helper/helper_methods.dart';
 
 class PromotionsPage extends StatefulWidget {
@@ -41,6 +43,8 @@ class _PromotionsPageState extends State<PromotionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppBar("P R O M O T I O N S"),
+      drawer: MyDrawer(),
       body: StreamBuilder(
         stream: _firestore.collection("promotions").snapshots(),
         builder: (context, snapshot) {
@@ -97,7 +101,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                         child: Container(
                           decoration: BoxDecoration(
                             color:
-                                Theme.of(context).colorScheme.tertiaryContainer,
+                                Theme.of(context).colorScheme.secondaryContainer,
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Column(
@@ -123,7 +127,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .tertiary,
+                                            .secondary,
                                       ),
                                     ),
                                   ],
@@ -151,14 +155,14 @@ class _PromotionsPageState extends State<PromotionsPage> {
                               ),
                               Row(
                                 children: [
-                                  Column(
+                                  Row(
                                     children: [
                                       IconButton(
                                         icon: Icon(
                                           isLiked
                                               ? Icons.favorite
                                               : Icons.favorite_outline,
-                                          color: isLiked ? Colors.red : null,
+                                          color: isLiked ? Colors.green : null,
                                         ),
                                         onPressed: () {
                                           print("Like button pressed");
@@ -179,12 +183,12 @@ class _PromotionsPageState extends State<PromotionsPage> {
                                       
                                     ],
                                   ),
-                                  IconButton(
-                                      onPressed: () {
-                                        showCommentsSheet(
-                                            context, promotion_id);
-                                      },
-                                      icon: Icon(Icons.mail_outline)),
+                                  // IconButton(
+                                  //     onPressed: () {
+                                  //       showCommentsSheet(
+                                  //           context, promotion_id);
+                                  //     },
+                                  //     icon: Icon(Icons.mail_outline)),
                                 ],
                               )
                             ],
@@ -203,37 +207,3 @@ class _PromotionsPageState extends State<PromotionsPage> {
 }
 
 
-void showCommentsSheet(BuildContext context, String promotionId) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.1,
-        maxChildSize: 0.9,
-        expand: true,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0),
-              ),
-            ),
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: 1, // Replace with actual number of comments
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text('Comment $index'),
-                );
-              },
-            ),
-          );
-        },
-      );
-    },
-  );
-}

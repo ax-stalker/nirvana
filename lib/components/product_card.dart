@@ -19,7 +19,7 @@ class ProductCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '\$${product.price.toStringAsFixed(2)}',
+                  'KSH: ${product.price.toStringAsFixed(2)}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 // Add any additional buttons or actions here (optional)

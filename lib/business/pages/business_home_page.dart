@@ -38,7 +38,7 @@ class BusinessHomePage extends StatelessWidget {
         description: description,
         )), icon: const Icon(Icons.person))],
       ),
-      drawer: const MyDrawer(),
+      drawer:  MyDrawer(),
         // start
        body: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance.collection('product').where('business_id', isEqualTo: id).snapshots(),
