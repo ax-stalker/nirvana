@@ -54,7 +54,6 @@ dependencies:
   url_launcher: ^6.2.5
   get: ^4.6.6
   intl_phone_number_input: ^0.7.4
-  camera: ^0.10.5+9
 
 dev_dependencies:
   flutter_test:
