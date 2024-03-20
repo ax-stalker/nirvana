@@ -26,8 +26,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
     String profileImageUrl = '';
-   String username = '';
-   String email = '';
+    String username = '';
+   late String email;
    String docid = '';
    
   static Map<String, dynamic> userDetails = {};
@@ -57,13 +57,8 @@ class _ProfilePageState extends State<ProfilePage> {
           setState(() {
              docid = doc.id;
          
-            username = doc['username'];
-          
-          
             email = doc['email'];
-          
-          
-        
+            username = doc['username'];
             profileImageUrl = doc['profile_image'];
           
           })
