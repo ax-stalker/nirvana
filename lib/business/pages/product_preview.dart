@@ -27,7 +27,7 @@ class _productPreviewState extends State<productPreview> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            image_slider(urli: widget.logo_path, docid: widget.id,collectionName: collection_name,imagefolder: 'product_images',),
+            image_slider(urli: widget.logo_path, docid: widget.id,collectionName: collection_name,varimage: 'image',imagefolder: 'product_images',),
                 SingleChildScrollView(
               child: Column(
                 children: [

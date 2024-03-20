@@ -13,9 +13,11 @@ class image_slider extends StatefulWidget {
     required this.docid,
     required this.collectionName,
     required this.imagefolder,
+    required this.varimage,
   });
 
   final String urli;
+  String varimage;
   String docid;
   String collectionName;
   String imagefolder;
@@ -84,7 +86,7 @@ Future getImageFromGallery() async {
                   Reference ref = _storage.ref().child(widget.imagefolder).child(imageName);
                   await ref.putFile(img!);
                     String image = await ref.getDownloadURL();
-                    final data = {"logo": image};
+                    final data = {widget.varimage :image};
                     await _firestore.collection(widget.collectionName).doc(widget.docid).set(data, SetOptions(merge: true));
                     print("image saved");
 

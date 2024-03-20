@@ -30,7 +30,7 @@ class _userProfileState extends State<userProfile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            image_slider(urli: widget.logo_path, docid: widget.id,collectionName: "business",imagefolder: "business_profile_image",),
+            image_slider(urli: widget.logo_path, docid: widget.id,collectionName: "business",varimage:'logo',imagefolder: "business_profile_image",),
                 SingleChildScrollView(
               child: Column(
                 children: [

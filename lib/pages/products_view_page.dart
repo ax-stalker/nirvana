@@ -22,7 +22,7 @@ class ProductViewPage extends StatelessWidget {
             .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -71,7 +71,7 @@ class ProductViewPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       products[i]['name'],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
                                       ),

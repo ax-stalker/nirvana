@@ -59,9 +59,7 @@ class BusinessHomePage extends StatelessWidget {
                       child: const Center(child: Text("No products ", style: TextStyle(fontSize: 20, color: Colors.grey),)),);
                     }
                     print('number of products ${products.length}');
-                    // var product = products[0].data() as Map<String, dynamic>;
-                    // print("product name is ${product['name']} and its description is ${product['description']}");
-                    // return Text("${product}");
+                   
                     return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context,index){
